@@ -10,4 +10,4 @@ It's frame is t-slot extrusions and can currently be built with 15mm OpenBeam or
 
 
 # Status
-Currently the first le3p is assembled and mostly configured.  No prints have yet been atempted
+Currently the first le3p is assembled and mostly configured.  No prints have yet been atempted.
