@@ -1,5 +1,7 @@
 #le3p-v0.1.3 - pToolHolder.py
 
+#GITTEST#
+
 # le3p - A larger envelope, t-slot extrusion based, H-Gantry 3D printer.
 #
 # Copyright (c) 2013 Scott Maher scott.a.maher@gmail.com
@@ -38,8 +40,8 @@ ps = partSizes.partSizes()
 
 
 def DualE3d():
-  couplerdia = 10
-	couplerlen = 6
+    couplerdia = 10
+    couplerlen = 6
 	hemountdia = 16.5
 	hemounttopringlen = 5
 	hemountinnerlen = 5.5
