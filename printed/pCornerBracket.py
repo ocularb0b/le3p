@@ -38,31 +38,31 @@ ac = advancedConfig.advancedConfig()
 ps = partSizes.partSizes()
 
 def SmallCornerBracket():
-  size = ac.beamSize * 1.5
-	bb = Part.makeBox(size,ac.beamSize,size)
-	bb.translate(Vector(0,-ac.beamSize/2,0))
-	bc=bb.copy()
-	bc=bc.makeFillet(ac.beamSize/2,[bc.Edges[3]])
-	bc.translate(Vector(ac.minthick,0,ac.minthick))
-	bb=bb.makeFillet(ac.beamSize/2-0.01,[bb.Edges[4],bb.Edges[6],bb.Edges[9],bb.Edges[11]])
-	scb = bb.cut(bc)
-	s1 = CapHeadScrew(l=20,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
-	s1.rotate(Vector(0,0,0),Vector(0,1,0),90)
-	s1.translate(Vector(ac.minthick-ps.m3l[2],0,size-ac.beamSize/2))
-	s2 = CapHeadScrew(l=20,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
-	s2.translate(Vector(size-ac.beamSize/2,0,ac.minthick-ps.m3l[2]))
-	scb=scb.cut(s1.fuse(s2))
-	return scb
+    size = ac.beamSize * 1.5
+    bb = Part.makeBox(size,ac.beamSize,size)
+    bb.translate(Vector(0,-ac.beamSize/2,0))
+    bc=bb.copy()
+    bc=bc.makeFillet(ac.beamSize/2,[bc.Edges[3]])
+    bc.translate(Vector(ac.minthick,0,ac.minthick))
+    bb=bb.makeFillet(ac.beamSize/2-0.01,[bb.Edges[4],bb.Edges[6],bb.Edges[9],bb.Edges[11]])
+    scb = bb.cut(bc)
+    s1 = CapHeadScrew(l=20,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
+    s1.rotate(Vector(0,0,0),Vector(0,1,0),90)
+    s1.translate(Vector(ac.minthick-ps.m3l[2],0,size-ac.beamSize/2))
+    s2 = CapHeadScrew(l=20,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
+    s2.translate(Vector(size-ac.beamSize/2,0,ac.minthick-ps.m3l[2]))
+    scb=scb.cut(s1.fuse(s2))
+    return scb
 
 def LargeCornerBracket():
-	xsize = ps.m3l[1]+ac.minthick*2
-	ysize = ps.m3l[1]+ac.minthick*2
-	zsize = ac.beamSize
-	bb = Part.makeBox(xsize,ysize,zsize)
-	bb.translate(Vector(ac.beamSize/2,ac.beamSize/2,-ac.beamSize/2))
-	bbc = bb.copy()
-	bbc.translate(Vector(ac.minthick,ac.minthick,0))
-	bb = bb.cut(bbc)
-	
-	lcb = bb
-	return lcb
+    xsize = ps.m3l[1]+ac.minthick*2
+    ysize = ps.m3l[1]+ac.minthick*2
+    zsize = ac.beamSize
+    bb = Part.makeBox(xsize,ysize,zsize)
+    bb.translate(Vector(ac.beamSize/2,ac.beamSize/2,-ac.beamSize/2))
+    bbc = bb.copy()
+    bbc.translate(Vector(ac.minthick,ac.minthick,0))
+    bb = bb.cut(bbc)
+    
+    lcb = bb
+    return lcb

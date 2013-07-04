@@ -26,7 +26,7 @@ import sys
 #ac = advancedConfig.advancedConfig()
 
 class displayConfig:
-  # STL generation ##############################################################################################
+# STL generation ##############################################################################################
 	doSTLexport = 1
 	# Display #####################################################################################################
 	printedOnly = 0 #will only export STL's for printed parts

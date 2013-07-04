@@ -38,71 +38,71 @@ ps = partSizes.partSizes()
 
 
 def zEnds():
-  sizex = bc.zRodDia + ac.minthick*2
-	sizey = ac.zrodspacing + bc.gantryRodDia + ac.minthick*4 + ps.m3l[1]*2 
-	sizez = ac.beamSize
-	#print 'ysize = {x}'.format(x=sizey)
-	#body blank
-	bb = Part.makeBox(sizex,sizey,sizez)
-	bb.translate(Vector(-ac.frameringxlen/2,-sizey/2,0))
-	bb = bb.makeFillet(ac.minthick*2,[bb.Edges[4],bb.Edges[6]])
-	#inner clearance
-	ic = Part.makeCylinder(sizey/2-bc.zRodDia/2,sizez)
-	ic.translate(Vector(-ac.zrodxpos+sizey/2,0,0))
-	#rod cuts
-	rc = Part.makeBox(bc.zRodDia,bc.zRodDia,ac.beamSize)
-	rc.translate(Vector(-ac.zrodxpos-bc.zRodDia/2,-ac.zrodspacing/2-bc.zRodDia/2,0))
-	rc = rc.makeFillet(bc.zRodDia/2-0.01,[rc.Edges[4],rc.Edges[6]])
-	rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,1,0)))
-	#mount screws
-	ms1 = CapHeadScrew(l=10,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
-	ms1.rotate(Vector(0,0,0),Vector(0,1,0),90)
-	ms1.translate(Vector(-ac.frameringxlen/2+ac.minthick*2-2,sizey/2-ps.m3l[1]/2-ac.minthick,ac.beamSize/2))
-	ms2 = ms1.copy().mirror(Vector(0,ac.zrodspacing/2,0),Vector(0,1,0))
-	mss=ms1.fuse(ms2)
-	mss=mss.fuse(mss.mirror(Vector(0,0,0),Vector(0,1,0)))
-	
-	
-	ze = bb.cut(ic)
-	ze = ze.cut(rc)
-	ze = ze.cut(mss)
-	
-	zeu = ze.copy()
-	zeu.translate(Vector(0,0,ac.zrodlen - ac.framebasedeep - ac.bedThick - ac.beamSize))
-	zel = ze.copy()
-	zel.translate(Vector(0,0,ac.frameringbzpos - ac.beamSize/2))
-	
-	lca = lowClamp()
-	
-	
-	zes = zeu.fuse(zel.fuse(lca))
-	if dc.noMirror == 0:
-		zes = zes.fuse(zes.mirror(Vector(0,0,0),Vector(1,0,0)))
-	return zes
+    sizex = bc.zRodDia + ac.minthick*2
+    sizey = ac.zrodspacing + bc.gantryRodDia + ac.minthick*4 + ps.m3l[1]*2 
+    sizez = ac.beamSize
+    #print 'ysize = {x}'.format(x=sizey)
+    #body blank
+    bb = Part.makeBox(sizex,sizey,sizez)
+    bb.translate(Vector(-ac.frameringxlen/2,-sizey/2,0))
+    bb = bb.makeFillet(ac.minthick*2,[bb.Edges[4],bb.Edges[6]])
+    #inner clearance
+    ic = Part.makeCylinder(sizey/2-bc.zRodDia/2,sizez)
+    ic.translate(Vector(-ac.zrodxpos+sizey/2,0,0))
+    #rod cuts
+    rc = Part.makeBox(bc.zRodDia,bc.zRodDia,ac.beamSize)
+    rc.translate(Vector(-ac.zrodxpos-bc.zRodDia/2,-ac.zrodspacing/2-bc.zRodDia/2,0))
+    rc = rc.makeFillet(bc.zRodDia/2-0.01,[rc.Edges[4],rc.Edges[6]])
+    rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,1,0)))
+    #mount screws
+    ms1 = CapHeadScrew(l=10,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
+    ms1.rotate(Vector(0,0,0),Vector(0,1,0),90)
+    ms1.translate(Vector(-ac.frameringxlen/2+ac.minthick*2-2,sizey/2-ps.m3l[1]/2-ac.minthick,ac.beamSize/2))
+    ms2 = ms1.copy().mirror(Vector(0,ac.zrodspacing/2,0),Vector(0,1,0))
+    mss=ms1.fuse(ms2)
+    mss=mss.fuse(mss.mirror(Vector(0,0,0),Vector(0,1,0)))
+    
+    
+    ze = bb.cut(ic)
+    ze = ze.cut(rc)
+    ze = ze.cut(mss)
+    
+    zeu = ze.copy()
+    zeu.translate(Vector(0,0,ac.zrodlen - ac.framebasedeep - ac.bedThick - ac.beamSize))
+    zel = ze.copy()
+    zel.translate(Vector(0,0,ac.frameringbzpos - ac.beamSize/2))
+    
+    lca = lowClamp()
+    
+    
+    zes = zeu.fuse(zel.fuse(lca))
+    if dc.noMirror == 0:
+    	zes = zes.fuse(zes.mirror(Vector(0,0,0),Vector(1,0,0)))
+    return zes
 
 def lowClamp():
-	r=0
-	size = bc.gantryRodDia + ac.minthick + ps.m3l[1]
-	bb = Part.makeBox(size,size,ac.beamSize)
-	bb.translate(Vector(-ac.frameringxlen/2,ac.zrodspacing/2-bc.zRodDia/2,ac.frameringazpos - ac.beamSize/2))
-	bb = bb.makeFillet(size-ac.minthick,[bb.Edges[6]])
-	rc = Part.makeBox(bc.gantryRodDia,bc.gantryRodDia,ac.beamSize)
-	rc.translate(Vector(-ac.frameringxlen/2,ac.zrodspacing/2-bc.zRodDia/2,ac.frameringazpos - ac.beamSize/2))
-	rc = rc.makeFillet(ac.minthick,[rc.Edges[6]])
-	
-	#mount screws
-	ms1 = CapHeadScrew(l=10,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
-	ms1.rotate(Vector(0,0,0),Vector(1,0,0),-90)
-	ms1.translate(Vector(-ac.frameringxlen/2 + bc.gantryRodDia + (ac.minthick + ps.m3l[1])/2,ac.zrodspacing/2-bc.zRodDia/2+ac.minthick,ac.frameringazpos))
-	
-	ms2 = CapHeadScrew(l=10,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
-	ms2.rotate(Vector(0,0,0),Vector(0,1,0),90)
-	ms2.translate(Vector(-ac.frameringxlen/2+ac.minthick,ac.zrodspacing/2 + bc.zRodDia/2 + (ac.minthick + ps.m3l[1])/2,ac.frameringazpos))
-	
-	lc = bb.cut(rc)
-	lc = lc.cut(ms1)
-	lc = lc.cut(ms2)
-	#lc = lc.makeFillet(1,[lc.Edges[43]])
-	if dc.noMirror == 0:
-		lc = lc.fuse(lc.mirror(Vector(0,0,0),Vector(0,1,0)))
-	return lc
+    r=0
+    size = bc.gantryRodDia + ac.minthick + ps.m3l[1]
+    bb = Part.makeBox(size,size,ac.beamSize)
+    bb.translate(Vector(-ac.frameringxlen/2,ac.zrodspacing/2-bc.zRodDia/2,ac.frameringazpos - ac.beamSize/2))
+    bb = bb.makeFillet(size-ac.minthick,[bb.Edges[6]])
+    rc = Part.makeBox(bc.gantryRodDia,bc.gantryRodDia,ac.beamSize)
+    rc.translate(Vector(-ac.frameringxlen/2,ac.zrodspacing/2-bc.zRodDia/2,ac.frameringazpos - ac.beamSize/2))
+    rc = rc.makeFillet(ac.minthick,[rc.Edges[6]])
+    
+    #mount screws
+    ms1 = CapHeadScrew(l=10,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
+    ms1.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+    ms1.translate(Vector(-ac.frameringxlen/2 + bc.gantryRodDia + (ac.minthick + ps.m3l[1])/2,ac.zrodspacing/2-bc.zRodDia/2+ac.minthick,ac.frameringazpos))
+    
+    ms2 = CapHeadScrew(l=10,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2],cut=1)
+    ms2.rotate(Vector(0,0,0),Vector(0,1,0),90)
+    ms2.translate(Vector(-ac.frameringxlen/2+ac.minthick,ac.zrodspacing/2 + bc.zRodDia/2 + (ac.minthick + ps.m3l[1])/2,ac.frameringazpos))
+    
+    lc = bb.cut(rc)
+    lc = lc.cut(ms1)
+    lc = lc.cut(ms2)
+    #lc = lc.makeFillet(1,[lc.Edges[43]])
+    if dc.noMirror == 0:
+    	lc = lc.fuse(lc.mirror(Vector(0,0,0),Vector(0,1,0)))
+    return lc

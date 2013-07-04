@@ -38,60 +38,60 @@ ps = partSizes.partSizes()
 
 
 def zMotorMounts():
-  xsize = ac.zMotor[0]
-	ysize = ac.zrodspacing - bc.zRodDia
-	zsize = ac.zMotor[1] + ac.minthick*2 - ac.beamSize
-	#body blank
-	bb = Part.makeBox(xsize,ysize,zsize)
-	bb.translate(Vector(ac.zscrewxpos-xsize/2,-ysize/2,ac.frameringazpos + ac.beamSize/2))
-	bb=bb.makeFillet(ac.minthick*2,[bb.Edges[0],bb.Edges[2],bb.Edges[4],bb.Edges[6]])
-	#undercut
-	ucy = ac.zrodspacing - bc.zRodDia - ac.beamSize*2
-	uc = Part.makeBox(xsize,ucy,zsize-ac.minthick*2)
-	uc.translate(Vector(ac.zscrewxpos-xsize/2,-ucy/2,ac.frameringazpos + ac.beamSize/2))
-	uc=uc.makeFillet(ac.minthick,[uc.Edges[9],uc.Edges[11]])
-	#motor face cut
-	mfc = Part.makeCylinder(ac.zMotor[5]/2,ac.minthick*2)
-	mfc.translate(Vector(ac.zscrewxpos,0,ac.frameringazpos + ac.beamSize/2+zsize-ac.minthick*2))
-	#mount screws
-	ms1 = Part.makeCylinder(ps.m3l[0]/2,zsize)
-	ms1.translate(Vector(ac.zscrewxpos+ac.zMotor[0]/2-ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2))
-	ms2 = Part.makeCylinder(ps.m3l[0]/2,zsize)
-	ms2.translate(Vector(ac.zscrewxpos-ac.zMotor[0]/2+ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2))
-	mss=ms1.fuse(ms2)
-	mss=mss.fuse(mss.mirror(Vector(0,0,0),Vector(0,1,0)))
-	
-	mh1 = Part.makeCylinder(ps.m3l[1]/2,zsize)
-	mh1.translate(Vector(ac.zscrewxpos+ac.zMotor[0]/2-ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2+ac.minthick*2))
-	mh2 = Part.makeCylinder(ps.m3l[1]/2,zsize)
-	mh2.translate(Vector(ac.zscrewxpos-ac.zMotor[0]/2+ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2+ac.minthick*2))
-	mhs=mh1.fuse(mh2)
-	mhs=mhs.fuse(mhs.mirror(Vector(0,0,0),Vector(0,1,0)))
-	
-	#motor mount screws
-	ms1 = Part.makeCylinder(ps.m3l[0]/2,ac.minthick*2)
-	ms1.translate(Vector(ac.zscrewxpos+ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ac.minthick*2))
-	ms2 = Part.makeCylinder(ps.m3l[0]/2,ac.minthick*2)
-	ms2.translate(Vector(ac.zscrewxpos-ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ac.minthick*2))
-	mms = ms1.fuse(ms2)
-	mms=mms.fuse(mms.mirror(Vector(0,0,0),Vector(0,1,0)))
-	mh1 = Part.makeCylinder(ps.m3l[1]/2,ac.minthick*2)
-	mh1.translate(Vector(ac.zscrewxpos+ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ps.m3l[2]))
-	mh2 = Part.makeCylinder(ps.m3l[1]/2,ac.minthick*2)
-	mh2.translate(Vector(ac.zscrewxpos-ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ps.m3l[2]))
-	mmh = mh1.fuse(mh2)
-	mmh=mmh.fuse(mmh.mirror(Vector(0,0,0),Vector(0,1,0)))
-	
-	
-	zmm=bb.cut(uc.fuse(mfc.fuse(mss.fuse(mhs))))
-	zmm=zmm.cut(mms.fuse(mmh))
-	#stupid fix
-	zmm = zmm.mirror(Vector(0,0,0),Vector(1,0,0))
-	
-	if dc.forPrint == 1:
-		zmm.translate(Vector(ac.zscrewxpos-xsize/2-ac.minthick/2,0,-ac.frameringazpos-ac.beamSize/2-zsize))
-		zmm.rotate(Vector(0,0,0),Vector(1,0,0),180)
-	
-	if dc.noMirror == 0:
-		zmm=zmm.fuse(zmm.mirror(Vector(0,0,0),Vector(1,0,0)))
-	return zmm
+    xsize = ac.zMotor[0]
+    ysize = ac.zrodspacing - bc.zRodDia
+    zsize = ac.zMotor[1] + ac.minthick*2 - ac.beamSize
+    #body blank
+    bb = Part.makeBox(xsize,ysize,zsize)
+    bb.translate(Vector(ac.zscrewxpos-xsize/2,-ysize/2,ac.frameringazpos + ac.beamSize/2))
+    bb=bb.makeFillet(ac.minthick*2,[bb.Edges[0],bb.Edges[2],bb.Edges[4],bb.Edges[6]])
+    #undercut
+    ucy = ac.zrodspacing - bc.zRodDia - ac.beamSize*2
+    uc = Part.makeBox(xsize,ucy,zsize-ac.minthick*2)
+    uc.translate(Vector(ac.zscrewxpos-xsize/2,-ucy/2,ac.frameringazpos + ac.beamSize/2))
+    uc=uc.makeFillet(ac.minthick,[uc.Edges[9],uc.Edges[11]])
+    #motor face cut
+    mfc = Part.makeCylinder(ac.zMotor[5]/2,ac.minthick*2)
+    mfc.translate(Vector(ac.zscrewxpos,0,ac.frameringazpos + ac.beamSize/2+zsize-ac.minthick*2))
+    #mount screws
+    ms1 = Part.makeCylinder(ps.m3l[0]/2,zsize)
+    ms1.translate(Vector(ac.zscrewxpos+ac.zMotor[0]/2-ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2))
+    ms2 = Part.makeCylinder(ps.m3l[0]/2,zsize)
+    ms2.translate(Vector(ac.zscrewxpos-ac.zMotor[0]/2+ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2))
+    mss=ms1.fuse(ms2)
+    mss=mss.fuse(mss.mirror(Vector(0,0,0),Vector(0,1,0)))
+    
+    mh1 = Part.makeCylinder(ps.m3l[1]/2,zsize)
+    mh1.translate(Vector(ac.zscrewxpos+ac.zMotor[0]/2-ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2+ac.minthick*2))
+    mh2 = Part.makeCylinder(ps.m3l[1]/2,zsize)
+    mh2.translate(Vector(ac.zscrewxpos-ac.zMotor[0]/2+ac.beamSize/2,ysize/2-ac.beamSize/2,ac.frameringazpos + ac.beamSize/2+ac.minthick*2))
+    mhs=mh1.fuse(mh2)
+    mhs=mhs.fuse(mhs.mirror(Vector(0,0,0),Vector(0,1,0)))
+    
+    #motor mount screws
+    ms1 = Part.makeCylinder(ps.m3l[0]/2,ac.minthick*2)
+    ms1.translate(Vector(ac.zscrewxpos+ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ac.minthick*2))
+    ms2 = Part.makeCylinder(ps.m3l[0]/2,ac.minthick*2)
+    ms2.translate(Vector(ac.zscrewxpos-ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ac.minthick*2))
+    mms = ms1.fuse(ms2)
+    mms=mms.fuse(mms.mirror(Vector(0,0,0),Vector(0,1,0)))
+    mh1 = Part.makeCylinder(ps.m3l[1]/2,ac.minthick*2)
+    mh1.translate(Vector(ac.zscrewxpos+ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ps.m3l[2]))
+    mh2 = Part.makeCylinder(ps.m3l[1]/2,ac.minthick*2)
+    mh2.translate(Vector(ac.zscrewxpos-ac.zMotor[4]/2,ac.zMotor[4]/2,ac.frameringazpos + ac.beamSize/2+zsize-ps.m3l[2]))
+    mmh = mh1.fuse(mh2)
+    mmh=mmh.fuse(mmh.mirror(Vector(0,0,0),Vector(0,1,0)))
+    
+    
+    zmm=bb.cut(uc.fuse(mfc.fuse(mss.fuse(mhs))))
+    zmm=zmm.cut(mms.fuse(mmh))
+    #stupid fix
+    zmm = zmm.mirror(Vector(0,0,0),Vector(1,0,0))
+    
+    if dc.forPrint == 1:
+    	zmm.translate(Vector(ac.zscrewxpos-xsize/2-ac.minthick/2,0,-ac.frameringazpos-ac.beamSize/2-zsize))
+    	zmm.rotate(Vector(0,0,0),Vector(1,0,0),180)
+    
+    if dc.noMirror == 0:
+    	zmm=zmm.fuse(zmm.mirror(Vector(0,0,0),Vector(1,0,0)))
+    return zmm

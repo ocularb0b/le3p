@@ -35,10 +35,10 @@ dc = displayConfig.displayConfig()
 ac = advancedConfig.advancedConfig()
 
 def Kapton():
-  t = Part.makeBox(ac.envelopeX+ac.hotEndDia+ac.hotEndSpacing,ac.envelopeY,0.1)
-	t.translate(Vector(-(ac.envelopeX+ac.hotEndDia+ac.hotEndSpacing)/2,-ac.envelopeY/2,0)) 
-	t.translate(Vector(0,0,ac.mZpos))
-	return t 
+    t = Part.makeBox(ac.envelopeX+ac.hotEndDia+ac.hotEndSpacing,ac.envelopeY,0.1)
+    t.translate(Vector(-(ac.envelopeX+ac.hotEndDia+ac.hotEndSpacing)/2,-ac.envelopeY/2,0)) 
+    t.translate(Vector(0,0,ac.mZpos))
+    return t 
 
 def GlassPlate():
 	p = Part.makeBox(bc.bedSizeX,bc.bedSizeY,bc.glassPlateThick)

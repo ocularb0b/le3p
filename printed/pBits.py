@@ -38,23 +38,23 @@ ac = advancedConfig.advancedConfig()
 ps = partSizes.partSizes()
 
 def cableClip(tall=10):
-  gap=0.1
-	tb = TSlot(length = tall)
-	tb.rotate(Vector(0,0,0),Vector(0,0,1),180)
-	clip = Part.makeBox(ac.beamSize,ac.beamSize,tall)
-	clip.translate(Vector(-ac.beamSize/2,0,0))
-	clip=clip.makeFillet(ac.beamSize/2-0.01,[clip.Edges[2],clip.Edges[6]])
-	cc=Part.makeCylinder(ac.beamSize/3,tall)
-	cc.translate(Vector(0,ac.beamSize/2,0))
-	sl=Part.makeBox(ac.beamSize,gap,tall)
-	sl.translate(Vector(0,ac.beamSize/2-gap/2,0))
-	th=Part.makeCylinder(1,tall)
-	th.translate(Vector(ac.beamSize/3,ac.beamSize/6,0))
-	th=th.fuse(th.mirror(Vector(0,0,0),Vector(1,0,0)))
-	clip = clip.cut(cc.fuse(sl.fuse(th)))
-	clip = clip.fuse(tb)
-	clip=clip.makeFillet(ac.beamSize/8,[clip.Edges[40],clip.Edges[36]])
-	return clip
+    gap=0.1
+    tb = TSlot(length = tall)
+    tb.rotate(Vector(0,0,0),Vector(0,0,1),180)
+    clip = Part.makeBox(ac.beamSize,ac.beamSize,tall)
+    clip.translate(Vector(-ac.beamSize/2,0,0))
+    clip=clip.makeFillet(ac.beamSize/2-0.01,[clip.Edges[2],clip.Edges[6]])
+    cc=Part.makeCylinder(ac.beamSize/3,tall)
+    cc.translate(Vector(0,ac.beamSize/2,0))
+    sl=Part.makeBox(ac.beamSize,gap,tall)
+    sl.translate(Vector(0,ac.beamSize/2-gap/2,0))
+    th=Part.makeCylinder(1,tall)
+    th.translate(Vector(ac.beamSize/3,ac.beamSize/6,0))
+    th=th.fuse(th.mirror(Vector(0,0,0),Vector(1,0,0)))
+    clip = clip.cut(cc.fuse(sl.fuse(th)))
+    clip = clip.fuse(tb)
+    clip=clip.makeFillet(ac.beamSize/8,[clip.Edges[40],clip.Edges[36]])
+    return clip
 
 def CableClip():
 	tall = 3
