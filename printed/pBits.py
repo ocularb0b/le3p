@@ -119,6 +119,38 @@ def yStop():
 	
 	return zs
 
+def xStop():
+    gapmod=2
+    rc = Part.makeCylinder(bc.gantryRodDia/2+ac.minthick,ac.minthick)
+    rc.rotate(Vector(0,0,0),Vector(0,1,0),90)
+    rc.translate(Vector(0,0,ac.xrodspacing/2))
+    rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,0,1)))
+    bb = Part.makeBox(ac.minthick,ac.minthick,ac.xrodspacing)
+    bb.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/2))
+    es = Part.makeBox(ac.minthick,ac.minthick+bc.gantryRodDia,ac.xrodspacing/4)
+    es.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/5))
+    es = es.makeFillet(ac.minthick,[es.Edges[10],es.Edges[11]])
+    cs = Part.makeBox(ac.minthick,bc.gantryRodDia/2+ac.minthick,bc.gantryRodDia-gapmod)
+    cs.translate(Vector(0,0,-(bc.gantryRodDia-gapmod)/2+ac.xrodspacing/2))
+    rd = Part.makeCylinder(bc.gantryRodDia/2,ac.minthick)
+    rd.rotate(Vector(0,0,0),Vector(0,1,0),90)
+    rd.translate(Vector(0,0,ac.xrodspacing/2))
+    rd=rd.fuse(cs)
+    rd = rd.fuse(rd.mirror(Vector(0,0,0),Vector(0,0,1)))
+    
+    xs = rc.fuse(bb)
+    xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[0],xs.Edges[5]])
+    xs = xs.fuse(es)
+    xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[24],xs.Edges[60]])
+    xs = xs.cut(rd)
+    xs = xs.makeFillet(ac.minthick/2,[xs.Edges[73],xs.Edges[74],xs.Edges[107],xs.Edges[111]])
+    if dc.forPrint == 0:
+        xs.translate(Vector(-ac.xrodlen/2+50,ac.xrodypos,ac.xrodzcenter))
+    else:
+        xs.rotate(Vector(0,0,0),Vector(0,1,0),90)
+        xs.translate(Vector(0,0,ac.minthick))
+    return xs
+
 def RumbaMount():
 	ysize = 60
 	rm = Part.makeBox(ac.beamSize,ysize,ac.beamSize)

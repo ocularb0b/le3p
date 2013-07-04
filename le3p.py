@@ -40,7 +40,7 @@ from include.shapes import FilletFlange
 
 test = FreeCAD.activeDocument()
 if test == None:
-  clear = 0
+    clear = 0
 else:
 	clear = 1
 
@@ -926,6 +926,19 @@ def makeLE3P():
 				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_YStop.stl'))
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_YStop.stl'))
+
+	if dc.showXStop == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
+		tool = doc.addObject("Part::Feature", "XStop")
+		tool.Shape = pBits.xStop()
+		tool.Label = "X Stop"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("XStop").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
+		FreeCADGui.getDocument("le3p").getObject("XStop").Transparency = (dc.print1A)
+		if dc.doSTLexport == 1:
+			if dc.forPrint == 1:
+				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_XStop.stl'))
+			else:
+				tool.Shape.exportStl(bc.exportpath % ('printed/export_XStop.stl'))
 
 	if dc.showZCarriage == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ZCarriage")

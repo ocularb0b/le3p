@@ -24,8 +24,8 @@ import sys
 
 
 class basicConfig():
-  #important stuff
-	exportpath = "/home/scott/Projects/LE3P/Le3p-new/le3p-v0.1.3/stls/%s"
+    #important stuff
+	exportpath = "/home/scott/Projects/eclipseworkspace/le3p/stls/%s"
 	
 	#Machine Size
 	#bedSize is the size of the build surface: glass plate, garolite sheet, etc.
