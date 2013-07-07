@@ -1030,6 +1030,16 @@ def makeLE3P():
 		if dc.doSTLexport == 1:
 			tool.Shape.exportStl(bc.exportpath % ('printed/export_PowerSupplyMounts.stl'))
 
+	if dc.showLedBracket == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "LedBracket")
+		tool.Shape = pBits.LedBracket()
+		tool.Label = "Led Bracket"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("LedBracket").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
+		FreeCADGui.getDocument("le3p").getObject("LedBracket").Transparency = (dc.print1A)
+		if dc.doSTLexport == 1:
+			tool.Shape.exportStl(bc.exportpath % ('printed/export_LedBracket.stl'))
+
 	# Electronics
 	if dc.showElectronics == 1 and dc.showPowerSupplies == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "PowerSupplyA")

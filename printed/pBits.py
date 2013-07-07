@@ -31,6 +31,7 @@ from config import partSizes
 
 from include.parts import CapHeadScrew
 from include.shapes import TSlot
+from include.shapes import regPolygon
 
 bc = basicConfig.basicConfig()
 dc = displayConfig.displayConfig()
@@ -38,23 +39,23 @@ ac = advancedConfig.advancedConfig()
 ps = partSizes.partSizes()
 
 def cableClip(tall=10):
-    gap=0.1
-    tb = TSlot(length = tall)
-    tb.rotate(Vector(0,0,0),Vector(0,0,1),180)
-    clip = Part.makeBox(ac.beamSize,ac.beamSize,tall)
-    clip.translate(Vector(-ac.beamSize/2,0,0))
-    clip=clip.makeFillet(ac.beamSize/2-0.01,[clip.Edges[2],clip.Edges[6]])
-    cc=Part.makeCylinder(ac.beamSize/3,tall)
-    cc.translate(Vector(0,ac.beamSize/2,0))
-    sl=Part.makeBox(ac.beamSize,gap,tall)
-    sl.translate(Vector(0,ac.beamSize/2-gap/2,0))
-    th=Part.makeCylinder(1,tall)
-    th.translate(Vector(ac.beamSize/3,ac.beamSize/6,0))
-    th=th.fuse(th.mirror(Vector(0,0,0),Vector(1,0,0)))
-    clip = clip.cut(cc.fuse(sl.fuse(th)))
-    clip = clip.fuse(tb)
-    clip=clip.makeFillet(ac.beamSize/8,[clip.Edges[40],clip.Edges[36]])
-    return clip
+	gap=0.1
+	tb = TSlot(length = tall)
+	tb.rotate(Vector(0,0,0),Vector(0,0,1),180)
+	clip = Part.makeBox(ac.beamSize,ac.beamSize,tall)
+	clip.translate(Vector(-ac.beamSize/2,0,0))
+	clip=clip.makeFillet(ac.beamSize/2-0.01,[clip.Edges[2],clip.Edges[6]])
+	cc=Part.makeCylinder(ac.beamSize/3,tall)
+	cc.translate(Vector(0,ac.beamSize/2,0))
+	sl=Part.makeBox(ac.beamSize,gap,tall)
+	sl.translate(Vector(0,ac.beamSize/2-gap/2,0))
+	th=Part.makeCylinder(1,tall)
+	th.translate(Vector(ac.beamSize/3,ac.beamSize/6,0))
+	th=th.fuse(th.mirror(Vector(0,0,0),Vector(1,0,0)))
+	clip = clip.cut(cc.fuse(sl.fuse(th)))
+	clip = clip.fuse(tb)
+	clip=clip.makeFillet(ac.beamSize/8,[clip.Edges[40],clip.Edges[36]])
+	return clip
 
 def CableClip():
 	tall = 3
@@ -74,6 +75,73 @@ def CableClip():
 	cc=t.fuse(cl)
 	cc=cc.cut(zr)
 	return cc
+
+def LedBracket():
+	striplen = 50
+	wallthick = 3
+	ribthick = 3
+	fingergriplen = wallthick
+	coverad = 19.5
+	covesides = 12
+	coveyoff = 0.75
+	
+	#body blank
+	bb = Part.makeBox(striplen,ac.beamSize/2+ribthick/2+wallthick+fingergriplen,ac.beamSize/2+ribthick/2+wallthick+fingergriplen)
+	bb.translate(Vector(-striplen/2,-ribthick/2-ac.beamSize/2-fingergriplen,-ribthick/2-fingergriplen))
+	#beam cut
+	bc = Part.makeBox(striplen,ac.beamSize,ac.beamSize)
+	bc.translate(Vector(-striplen/2,-ac.beamSize,-ac.beamSize/2))
+	#clip ribs
+	cr = Part.makeCylinder(ribthick/2,striplen)
+	cr.translate(Vector(0,0,-striplen/2))
+	cr.rotate(Vector(0,0,0),Vector(0,1,0),-90)
+	cr2 = Part.makeCylinder(ribthick/2,striplen)
+	cr2.translate(Vector(0,0,-striplen/2))
+	cr2.rotate(Vector(0,0,0),Vector(0,1,0),-90)
+	cr2.translate(Vector(0,-ac.beamSize/2,ac.beamSize/2))
+	cr = cr.fuse(cr2)
+	#lamp cove
+	lc = Part.makeCylinder(coverad+wallthick*2,striplen)
+	lc.translate(Vector(0,0,-striplen/2))
+	lc.rotate(Vector(0,0,0),Vector(0,1,0),-90)
+	lc.translate(Vector(0,coverad+wallthick+coveyoff,0))
+	lcc = regPolygon(sides = 12,radius=coverad,extrude=striplen)
+	lcc.translate(Vector(0,0,-striplen/2))
+	lcc.rotate(Vector(0,0,0),Vector(0,1,0),-90)
+	lcc.translate(Vector(0,coverad+wallthick+coveyoff,0))
+	lcbc=Part.makeBox(striplen,coverad*2+wallthick*4,coverad+wallthick*2)
+	lcbc.translate(Vector(-striplen/2,coveyoff-wallthick,-coverad-wallthick*2))
+	lcfc=Part.makeBox(striplen,coverad*2+wallthick*2,coverad+wallthick*2)
+	lcfc.translate(Vector(-striplen/2,coveyoff+coverad+wallthick,))
+	lc=lc.cut(lcc.fuse(lcbc.fuse(lcfc)))
+	lc.translate(Vector(0,0,-fingergriplen-ribthick/2))
+	lc=lc.makeFillet(wallthick,[lc.Edges[2]])
+
+	lb = bb
+	lb = lb.fuse(lc)
+	lb = lb.cut(bc)
+	lb = lb.makeFillet(wallthick-0.01,[lb.Edges[3],lb.Edges[8],lb.Edges[22]])
+	lb = lb.fuse(cr)
+	
+	
+	if dc.forPrint == 0:
+		lb.translate(Vector(0,-ac.frameringylen/2+ac.tailadd/2,ac.frameysupportszpos))
+		lb2=lb.copy()
+		lb2.translate(Vector(-striplen,0,0))
+		lb3=lb.copy()
+		lb3.translate(Vector(-striplen*2,0,0))
+		lb4=lb.copy()
+		lb4.translate(Vector(striplen,0,0))
+		lb5=lb.copy()
+		lb5.translate(Vector(striplen*2,0,0))
+		lb6=lb.copy()
+		lb6.translate(Vector(striplen*3,0,0))
+		lb = lb.fuse(lb2.fuse(lb3.fuse(lb4.fuse(lb5.fuse(lb6)))))
+		lb.translate(Vector(-striplen/2,0,0))
+	else:
+		lb.rotate(Vector(0,0,0),Vector(0,1,0),90)
+		lb.translate(Vector(0,0,+striplen/2))
+	return lb
 
 def yStop():
 	pair = 1
