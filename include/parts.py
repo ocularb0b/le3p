@@ -98,6 +98,64 @@ def Bearing(dim=[4,13,5]):
 	b = bo.cut(bi)
 	return b
 
+def Fan(size=40,thick=10.75,screwdia=3.25,screwspacing=32):
+	
+	fb = Part.makeBox(size,thick,size)
+	fb = fb.makeFillet(screwdia,[fb.Edges[1],fb.Edges[3],fb.Edges[5],fb.Edges[7]])
+	
+	#port
+	pt = Part.makeCylinder(size/2-(size*0.02),thick)
+	pt.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	pt.translate(Vector(size/2,0,size/2))
+	
+	#screws
+	sc = Part.makeCylinder(screwdia/2,thick)
+	sc.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	sc.translate(Vector(size/2,0,size/2))
+	
+	s1=sc.copy()
+	s1.translate(Vector(-screwspacing/2,0,-screwspacing/2))
+	s2=sc.copy()
+	s2.translate(Vector(-screwspacing/2,0,screwspacing/2))
+	s3=sc.copy()
+	s3.translate(Vector(screwspacing/2,0,screwspacing/2))
+	s4=sc.copy()
+	s4.translate(Vector(screwspacing/2,0,-screwspacing/2))
+	
+	sc=s1.fuse(s2.fuse(s3).fuse(s4))
+	
+	#fanhub
+	fh = Part.makeCylinder(size/4,thick)
+	fh.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	fh.translate(Vector(size/2,0,size/2))
+	
+	#fan blades
+	n = 7
+	bth = 1
+	bl = Part.makeBox(bth,thick*2,size/2)
+	bl.translate(Vector(-bth/2,-thick,0))
+	bl.rotate(Vector(0,0,0),Vector(0,0,1),-45)
+	bl.translate(Vector(size/2,thick/2,size/2))
+	bls = bl.copy()
+	for i in range(1,n):
+		b=bl.copy()
+		b.rotate(Vector(size/2,0,size/2),Vector(0,1,0),(360/n)*i)
+		bls=bls.fuse(b)
+	blsfc = Part.makeBox(size+20,thick,size+20)
+	blsfc.translate(Vector(-10,-thick+2,-10))
+	bls = bls.cut(blsfc)
+	blsfc.translate(Vector(0,thick*2-4,0))
+	bls = bls.cut(blsfc)
+	blset = Part.makeCylinder(size/2-(size*0.016),thick)
+	blset.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	blset.translate(Vector(size/2,0,size/2))
+	bls = bls.common(blset)
+	
+	fan = fb.cut(pt)
+	fan = fan.cut(sc)
+	fan = fan.fuse(fh)
+	fan = fan.fuse(bls)
+	return fan
 
 def E3Dv4():
 	blockx = 14

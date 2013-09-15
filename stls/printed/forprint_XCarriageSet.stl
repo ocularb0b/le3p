@@ -1301,7 +1301,7 @@ solid
      vertex  1.590694e+01  1.450000e+01  1.932262e+01
    endloop
  endfacet
- facet normal -1.586063e-28  1.000000e+00  3.413158e-14
+ facet normal -0.000000e+00  1.000000e+00  3.413158e-14
    outer loop
      vertex -1.904893e+01  1.450000e+01  1.759530e+01
      vertex -1.828440e+01  1.450000e+01  1.759530e+01

@@ -38,6 +38,31 @@ dc = displayConfig.displayConfig()
 ac = advancedConfig.advancedConfig()
 ps = partSizes.partSizes()
 
+def BeamClip(tall=10): #fairly useless on it's own
+	wall = 3
+	finger = 3
+	rib = 3
+	ribdepth = 1.5
+	#body blank
+	bb = Part.makeBox(ac.beamSize/2+wall+rib/2+finger,ac.beamSize/2+wall+rib/2+finger,tall)
+	bb.translate(Vector(+ac.beamSize/2-rib/2-finger,+ac.beamSize/2-rib/2-finger,0))
+	#beam cut
+	bc = Part.makeBox(ac.beamSize,ac.beamSize,tall)
+	bb = bb.cut(bc)
+	bb = bb.makeFillet(wall-0.01,[bb.Edges[2],bb.Edges[4],bb.Edges[17]])
+	bb.translate(Vector(-ac.beamSize/2,-ac.beamSize/2,0))
+	#beam rib
+	br = Part.makeBox(rib,ribdepth,tall)
+	br.translate(Vector(-rib/2,ac.beamSize/2-ribdepth,0))
+	if rib <= ribdepth:
+		br = br.makeFillet(rib-0.01,[br.Edges[0]])
+	else:
+		br = br.makeFillet(ribdepth-0.01,[br.Edges[0]])
+	br = br.fuse(br.mirror(Vector(0,0,0),Vector(-1,1,0)))
+	
+	clip = bb.fuse(br)
+	return clip
+
 def cableClip(tall=10):
 	gap=0.1
 	tb = TSlot(length = tall)
@@ -82,7 +107,6 @@ def LedBracket():
 	ribthick = 3
 	fingergriplen = wallthick
 	coverad = 19.5
-	covesides = 12
 	coveyoff = 0.75
 	
 	#body blank
@@ -188,36 +212,36 @@ def yStop():
 	return zs
 
 def xStop():
-    gapmod=2
-    rc = Part.makeCylinder(bc.gantryRodDia/2+ac.minthick,ac.minthick)
-    rc.rotate(Vector(0,0,0),Vector(0,1,0),90)
-    rc.translate(Vector(0,0,ac.xrodspacing/2))
-    rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,0,1)))
-    bb = Part.makeBox(ac.minthick,ac.minthick,ac.xrodspacing)
-    bb.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/2))
-    es = Part.makeBox(ac.minthick,ac.minthick+bc.gantryRodDia,ac.xrodspacing/4)
-    es.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/5))
-    es = es.makeFillet(ac.minthick,[es.Edges[10],es.Edges[11]])
-    cs = Part.makeBox(ac.minthick,bc.gantryRodDia/2+ac.minthick,bc.gantryRodDia-gapmod)
-    cs.translate(Vector(0,0,-(bc.gantryRodDia-gapmod)/2+ac.xrodspacing/2))
-    rd = Part.makeCylinder(bc.gantryRodDia/2,ac.minthick)
-    rd.rotate(Vector(0,0,0),Vector(0,1,0),90)
-    rd.translate(Vector(0,0,ac.xrodspacing/2))
-    rd=rd.fuse(cs)
-    rd = rd.fuse(rd.mirror(Vector(0,0,0),Vector(0,0,1)))
-    
-    xs = rc.fuse(bb)
-    xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[0],xs.Edges[5]])
-    xs = xs.fuse(es)
-    xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[24],xs.Edges[60]])
-    xs = xs.cut(rd)
-    xs = xs.makeFillet(ac.minthick/2,[xs.Edges[73],xs.Edges[74],xs.Edges[107],xs.Edges[111]])
-    if dc.forPrint == 0:
-        xs.translate(Vector(-ac.xrodlen/2+50,ac.xrodypos,ac.xrodzcenter))
-    else:
-        xs.rotate(Vector(0,0,0),Vector(0,1,0),90)
-        xs.translate(Vector(0,0,ac.minthick))
-    return xs
+	gapmod=2
+	rc = Part.makeCylinder(bc.gantryRodDia/2+ac.minthick,ac.minthick)
+	rc.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	rc.translate(Vector(0,0,ac.xrodspacing/2))
+	rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,0,1)))
+	bb = Part.makeBox(ac.minthick,ac.minthick,ac.xrodspacing)
+	bb.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/2))
+	es = Part.makeBox(ac.minthick,ac.minthick+bc.gantryRodDia,ac.xrodspacing/4)
+	es.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/5))
+	es = es.makeFillet(ac.minthick,[es.Edges[10],es.Edges[11]])
+	cs = Part.makeBox(ac.minthick,bc.gantryRodDia/2+ac.minthick,bc.gantryRodDia-gapmod)
+	cs.translate(Vector(0,0,-(bc.gantryRodDia-gapmod)/2+ac.xrodspacing/2))
+	rd = Part.makeCylinder(bc.gantryRodDia/2,ac.minthick)
+	rd.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	rd.translate(Vector(0,0,ac.xrodspacing/2))
+	rd=rd.fuse(cs)
+	rd = rd.fuse(rd.mirror(Vector(0,0,0),Vector(0,0,1)))
+
+	xs = rc.fuse(bb)
+	xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[0],xs.Edges[5]])
+	xs = xs.fuse(es)
+	xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[24],xs.Edges[60]])
+	xs = xs.cut(rd)
+	xs = xs.makeFillet(ac.minthick/2,[xs.Edges[73],xs.Edges[74],xs.Edges[107],xs.Edges[111]])
+	if dc.forPrint == 0:
+		xs.translate(Vector(-ac.xrodlen/2+50,ac.xrodypos,ac.xrodzcenter))
+	else:
+		xs.rotate(Vector(0,0,0),Vector(0,1,0),90)
+		xs.translate(Vector(0,0,ac.minthick))
+	return xs
 
 def RumbaMount():
 	ysize = 60
@@ -315,9 +339,19 @@ def HotEndFanMount():
 	hef=hef.cut(fc)
 	#hef=hef.fuse(f)
 	
-	hef.rotate(Vector(0,0,thick/2),Vector(0,1,0),180)
+	if dc.forPrint == 1:
+		hef.rotate(Vector(0,0,thick/2),Vector(0,1,0),180)
+	
+	if dc.forPrint == 0:
+		hef.translate(Vector(0,0,ac.envelopeZ + ac.hotEndLen - ac.hotEndMountLen-2.4))
 	
 	return hef
+
+def NozzelFanShroud():
+	
+	#if dc.forPrint == 0:
+		#nfs.translate(Vector(-ac.hotEndSpacing/2-ac.hotEndDia/2,0,ac.envelopeZ+torthick/2+1))
+	return 
 
 def PowerSupplyMount(reach=8):
 	xsize = ac.beamSize
@@ -352,15 +386,54 @@ def PowerSupplyMount(reach=8):
 	psam=psam.fuse(psamb)
 	return psam
 
-def ControllerArm(seglen = 80):
-	cat=Part.makeBox(10,10,10)
-	
-	ca = cat
+def ControllerArm():
+	tall = 12
+	mountsize = 8
+	wall = 3
+	mountscrewdia = 3.5
+	cl = BeamClip(tall)
+	mp = Part.makeBox(3,wall + mountsize,mountsize)
+	mp = mp.makeFillet(wall/2-0.01,[mp.Edges[2],mp.Edges[6],mp.Edges[10],mp.Edges[11]])
+	mp.translate(Vector(ac.beamSize/2,ac.beamSize/2,0))
+	ms = Part.makeCylinder(mountscrewdia/2,wall)
+	ms.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	ms.translate(Vector(ac.beamSize/2,ac.beamSize/2+wall+mountsize/2,mountsize/2))
+	ca = cl.fuse(mp)
+	ca = ca.cut(ms)
+	if dc.forPrint == 1:
+		ca = ca.fuse(ca.mirror(Vector(ac.beamSize/2+wall+2,0,0),Vector(1,0,0)))
+		ca.translate(Vector(-ac.beamSize/2-wall-2,-ac.beamSize/2,0))
+	else:
+		ca.rotate(Vector(0,0,0),Vector(0,0,1),-90)
+		ca = ca.fuse(ca.mirror(Vector(0,0,50),Vector(0,0,1)))
+		ca.translate(Vector(ac.frameringxlen/2+ac.beamSize/2,ac.frameringylen/2+ac.tailadd/2+ac.beamSize/2))
 	return ca
 
+def SpanPlate(zsize=50,xsize=20):
+	ztol = 0.25
+	platethick = 3
+	rib = 3
+	off = 0.25
+	#body blank
+	bb = Part.makeBox(xsize,ac.beamSize/2+rib/2-off,zsize-ztol*2)
+	bb.translate(Vector(0,off,ztol))
+	#back fat
+	bf = Part.makeBox(xsize,ac.beamSize+1,zsize-ztol*2-platethick*2)
+	bf = bf.makeFillet(ac.beamSize,[bf.Edges[8],bf.Edges[9]])
+	bf.translate(Vector(0,platethick,ztol+platethick))
+	
+	dm = bb.cut(bf)
+	dm = dm.makeFillet(platethick*2,[dm.Edges[20],dm.Edges[21]])
+	
+	if dc.forPrint == 0:
+		dm.translate(Vector(0,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize,ac.frameringazpos+ac.beamSize/2))
+	return dm
 
-
-
+def DimmerMount():
+	sc = SpanPlate(60,50)
+	
+	dm = sc
+	return dm
 
 
 

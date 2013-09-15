@@ -32,6 +32,7 @@ from include.parts import NemaMotor
 from include.parts import TimingGear
 from include.parts import StraightBushing
 from include.parts import Bearing
+from include.parts import Fan
 from include.shapes import regPolygon
 from include.shapes import BeltCorner
 from include.shapes import TSlot
@@ -40,7 +41,7 @@ from include.shapes import FilletFlange
 
 test = FreeCAD.activeDocument()
 if test == None:
-    clear = 0
+	clear = 0
 else:
 	clear = 1
 
@@ -100,16 +101,28 @@ if dc.forPrint == 1:
 # Manufactured Parts
 def HotEndsLayout():
 	t1 = E3Dv4()
+	t1.rotate(Vector(0,0,0),Vector(0,0,1),90)
 	t1.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen))
 	t1.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ))
 
 	t2 = E3Dv4()
+	t2.rotate(Vector(0,0,0),Vector(0,0,1),90)
 	t2.translate(Vector(ac.hotEndDia/2 + ac.hotEndSpacing/2,0, ac.hotEndLen))
 	t2.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ))
 		
 	f1 = t1.fuse(t2)
 	ts=f1		
 	return ts
+
+def HotEndFanLayout():
+	sz=40
+	th=10
+	fn = Fan(size=sz,thick=th)
+	fn.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen-ac.hotEndMountLen-2.4))
+	fn.translate(Vector(ac.mXpos-sz/2+ac.hotEndDia/2+ac.hotEndSpacing/2, ac.mYpos-th-ac.hotEndDia/2-1.2, ac.envelopeZ-sz+7.5))
+
+	fan = fn		
+	return fan
 		
 # Gantry
 def XRodsLayout():
@@ -480,6 +493,10 @@ def HotEndFanMountLayout():
 	hef = pBits.HotEndFanMount()
 	return hef
 
+def NozzleFanShroudLayout():
+	nfs = pBits.NozzelFanShroud()
+	return nfs
+
 # Electronics
 def PowerSupplyALayout():
 	psa = Part.makeBox(ac.PowerSupplyASize[0],ac.PowerSupplyASize[1],ac.PowerSupplyASize[2])
@@ -509,7 +526,7 @@ def makeLE3P():
 	Extruder = doc.addObject("App::DocumentObjectGroup",  "Extruder")
 	Electronics = doc.addObject("App::DocumentObjectGroup",  "Electronics")
 	
-	if dc.showHotEnds == 1 and dc.showManufacturedParts == 1 or dc.showAll == 1:
+	if dc.showHotEnds == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "HotEnds")
 		tool.Shape = HotEndsLayout()
 		tool.Label = "Hot Ends"
@@ -914,6 +931,16 @@ def makeLE3P():
 		if dc.doSTLexport == 1:
 			tool.Shape.exportStl(bc.exportpath % ('printed/forprint_HotEndFanMount.stl'))
 			
+	if dc.showNozzleFanShroud == 1 and dc.showPrintedParts == 1:
+		tool=doc.addObject("Part::Feature",  "NozzleFanShroud")
+		tool.Shape = NozzleFanShroudLayout()
+		tool.Label = "Nozzle Fan Shroud"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("NozzleFanShroud").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
+		FreeCADGui.getDocument("le3p").getObject("NozzleFanShroud").Transparency = (dc.print1A)
+		if dc.doSTLexport == 1:
+			tool.Shape.exportStl(bc.exportpath % ('printed/forprint_NozzleFanShroud.stl'))
+			
 	if dc.showYStop == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "YStop")
 		tool.Shape = pBits.yStop()
@@ -979,16 +1006,6 @@ def makeLE3P():
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_ExtruderDriver.stl'))
 			
-	if dc.showExtruderDriverMount == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
-		tool=doc.addObject("Part::Feature",  "ExtruderDriverMount")
-		tool.Shape = pExtruderDriver.MountPlate()
-		tool.Label = "Extruder Driver Mount"
-		Printed.addObject(tool)
-		FreeCADGui.getDocument("le3p").getObject("ExtruderDriverMount").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
-		FreeCADGui.getDocument("le3p").getObject("ExtruderDriverMount").Transparency = (dc.print1A)
-		if dc.doSTLexport == 1:
-			tool.Shape.exportStl(bc.exportpath % ('printed/export_ExtruderDriver.stl'))
-
 			
 	if dc.showSmallCornerBrackets == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "SmallCornerBrackets")
@@ -1039,6 +1056,32 @@ def makeLE3P():
 		FreeCADGui.getDocument("le3p").getObject("LedBracket").Transparency = (dc.print1A)
 		if dc.doSTLexport == 1:
 			tool.Shape.exportStl(bc.exportpath % ('printed/export_LedBracket.stl'))
+			
+	if dc.showControllerArm == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "ControllerArm")
+		tool.Shape = pBits.ControllerArm()
+		tool.Label = "Controller Arm"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("ControllerArm").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
+		FreeCADGui.getDocument("le3p").getObject("ControllerArm").Transparency = (dc.print1A)
+		if dc.doSTLexport == 1:
+			if dc.forPrint == 1:
+				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_ControllerArm.stl'))
+			else:
+				tool.Shape.exportStl(bc.exportpath % ('printed/export_ControllerArm.stl'))
+				
+	if dc.showDimmerMount == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "DimmerMount")
+		tool.Shape = pBits.DimmerMount()
+		tool.Label = "Dimmer Mount"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("DimmerMount").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
+		FreeCADGui.getDocument("le3p").getObject("DimmerMount").Transparency = (dc.print1A)
+		if dc.doSTLexport == 1:
+			if dc.forPrint == 1:
+				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_DimmerMount.stl'))
+			else:
+				tool.Shape.exportStl(bc.exportpath % ('printed/export_DimmerMount.stl'))
 
 	# Electronics
 	if dc.showElectronics == 1 and dc.showPowerSupplies == 1 or dc.showAll == 1:
@@ -1067,6 +1110,15 @@ def makeLE3P():
 		FreeCADGui.getDocument("le3p").getObject("ControlBoard").ShapeColor = (0.0,0.6,0.0)
 		if dc.doSTLexport == 1:
 			tool.Shape.exportStl(bc.exportpath % ('electronics/export_ControlBoard.stl'))
+			
+	if dc.showElectronics == 1 and dc.showHotEndFan == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "HotEndFan")
+		tool.Shape = HotEndFanLayout()
+		tool.Label = "Hot End Fan"
+		Electronics.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("HotEndFan").ShapeColor = (0.2,0.2,0.2)
+		if dc.doSTLexport == 1:
+			tool.Shape.exportStl(bc.exportpath % ('electronics/export_HotEndFan.stl'))
 
 
 def BOM():
@@ -1144,5 +1196,3 @@ if clear == 1:
 makeLE3P()
 BOM()
 
-#t = FilletFlange(innerdia=ac.zBushing[1],filletdia=ac.zBushing[1],filletthick=20)
-#Part.show(t)

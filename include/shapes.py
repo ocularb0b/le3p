@@ -174,4 +174,33 @@ def LE3Plogolong(size=20,deep=10):
 	LE3P=L.fuse(E.fuse(Three.fuse(P)))
 	return LE3P
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
