@@ -42,49 +42,53 @@ class displayConfig:
 	# Items to display ############################################################################################
 	# Group Toggles
 	showPrintedParts = 1
-	showManufacturedParts = 1
-	showExtruderParts = 1
-	showBedSurface = 1
-	showFrame = 1
+	showManufacturedParts = 0
+	showExtruderParts = 0
+	showBedSurface = 0
+	showFrame = 0
 	showElectronics = 1
 	
 	# Printed Part Toggles
-	showXCarriage = 1
-	showXEnds = 1
-	showYEndsIdle = 1
-	showYEndsMotor = 1
-	showZEndsUpper = 1
-	showGantryMotorMounts = 1
-	showZMotorMounts = 1
-	showZCarriage = 1
-	showToolHolder = 1
-	showExtruderDriver = 1
-	showExtruderDriverMount = 1
+	showXCarriage = 0
+	showXEnds = 0
+	showYEndsIdle = 0
+	showYEndsMotor = 0
+	showZEndsUpper = 0
+	showGantryMotorMounts = 0
+	showZMotorMounts = 0
+	showZCarriage = 0
+	showToolHolder = 0
+	showExtruderDriver = 0
 	#	Frame Brackets
-	showSmallCornerBrackets = 1
+	showSmallCornerBrackets = 0
 	#	Bits
 	showCableGuides = 0
 	showCableClips = 0
 	showYStop = 0
-	showHotEndFanMount = 0
-	showPowerSupplyAMount = 1
-	showRumbaMount = 1
+	showXStop = 0
+	showHotEndFanMount = 1
+	showNozzleFanShroud = 0
+	showPowerSupplyAMount = 0
+	showRumbaMount = 0
 	showRumbaFanMount = 0
 	showControllerArm = 0
+	showLedBracket = 0
+	showDimmerMount = 0
 	
 	
 	
 	# Frame Toggles
-	showFrameUprights = 1
+	showFrameUprights = 0
 	showFrameRingA = 1
 	showFrameRingB = 1
-	showFrameRingC = 1
-	showFrameYRodSupports = 1
-	showFrameZRodSupports = 1
-	showFrameZMotorSupports = 1
+	showFrameRingC = 0
+	showFrameYRodSupports = 0
+	showFrameZRodSupports = 0
+	showFrameZMotorSupports = 0
 
 	# Part Toggles
 	showHotEnds = 1
+	showHotEndFan = 1
 	
 	# Gantry Parts
 	showXRods = 1
@@ -113,8 +117,8 @@ class displayConfig:
 	
 	
 	# Electronics Toggles
-	showPowerSupplies = 1
-	showControlBoard = 1
+	showPowerSupplies = 0
+	showControlBoard = 0
 	
 	
 	# Part Colors #################################################################################################

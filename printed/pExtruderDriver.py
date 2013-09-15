@@ -59,8 +59,8 @@ lowerFittingDepth = 6
 
 positionOnMachine = 1
 if dc.forPrint == 1:
-  positionOnMachine = 0
-makeDual = 0
+	positionOnMachine = 0
+makeDual = 1
 
 def PG35GearStepper():
 	n=[1,-1]
@@ -112,9 +112,12 @@ def ExtruderMotor():
 	m.translate(Vector(gearDia/2+filamentDia/2,motoroffset,0))
 	m.translate(Vector(-(filamentDia/2+gearDia/2+35/2),0,0))
 	if positionOnMachine == 1:
-		m.translate(Vector(-ac.frameringxlen/2-ac.beamSize-ac.minthick,-10,(ac.frameringczpos+ac.framezsupportszpos)/2))
+		m.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		m.translate(Vector(ac.frameringxlen/2+ac.beamSize+ac.minthick+3,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2+0.5,(ac.frameringczpos+ac.framezsupportszpos)/2+ac.minthick*3))
 	if makeDual == 1:
-		m = m.fuse(m.mirror(Vector(0,0,0),Vector(0,1,0)))
+		m2 = m.mirror(Vector(ac.frameringxlen/2+ac.beamSize/2,0,0),Vector(1,0,0))
+		m2.rotate(Vector(ac.frameringxlen/2+ac.beamSize/2,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2,0),Vector(0,0,1),90)
+		m = m.fuse(m2)
 	return m
 
 def ExtruderSupportBearing():
@@ -130,9 +133,12 @@ def ExtruderSupportBearing():
 	b = b.fuse(c)
 	b.translate(Vector(-(filamentDia/2+gearDia/2+35/2),0,0))
 	if positionOnMachine == 1:
-		b.translate(Vector(-ac.frameringxlen/2-ac.beamSize-ac.minthick,-10,(ac.frameringczpos+ac.framezsupportszpos)/2))
+		b.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		b.translate(Vector(ac.frameringxlen/2+ac.beamSize+ac.minthick+3,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2+0.5,(ac.frameringczpos+ac.framezsupportszpos)/2+ac.minthick*3))
 	if makeDual == 1:
-		b = b.fuse(b.mirror(Vector(0,0,0),Vector(0,1,0)))
+		b2 = b.mirror(Vector(ac.frameringxlen/2+ac.beamSize/2,0,0),Vector(1,0,0))
+		b2.rotate(Vector(ac.frameringxlen/2+ac.beamSize/2,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2,0),Vector(0,0,1),90)
+		b = b.fuse(b2)
 	return b
 	
 def ExtruderIdleBearing():
@@ -144,9 +150,12 @@ def ExtruderIdleBearing():
 	b.translate(Vector(-ps.z624[1]/2-filamentDia/2,0,0))
 	b.translate(Vector(-(filamentDia/2+gearDia/2+35/2),0,0))
 	if positionOnMachine == 1:
-		b.translate(Vector(-ac.frameringxlen/2-ac.beamSize-ac.minthick,-10,(ac.frameringczpos+ac.framezsupportszpos)/2))
+		b.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		b.translate(Vector(ac.frameringxlen/2+ac.beamSize+ac.minthick+3,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2+0.5,(ac.frameringczpos+ac.framezsupportszpos)/2+ac.minthick*3))
 	if makeDual == 1:
-		b = b.fuse(b.mirror(Vector(0,0,0),Vector(0,1,0)))
+		b2 = b.mirror(Vector(ac.frameringxlen/2+ac.beamSize/2,0,0),Vector(1,0,0))
+		b2.rotate(Vector(ac.frameringxlen/2+ac.beamSize/2,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2,0),Vector(0,0,1),90)
+		b = b.fuse(b2)
 	return b
 	
 def ExtruderDriveGear():
@@ -159,29 +168,15 @@ def ExtruderDriveGear():
 	b.rotate(Vector(0,0,0),Vector(1,0,0),90)
 	b.translate(Vector(-(filamentDia/2+gearDia/2+35/2),0,0))
 	if positionOnMachine == 1:
-		b.translate(Vector(-ac.frameringxlen/2-ac.beamSize-ac.minthick,-10,(ac.frameringczpos+ac.framezsupportszpos)/2))
+		b.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		b.translate(Vector(ac.frameringxlen/2+ac.beamSize+ac.minthick+3,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2+0.5,(ac.frameringczpos+ac.framezsupportszpos)/2+ac.minthick*3))
 	if makeDual == 1:
-		b = b.fuse(b.mirror(Vector(0,0,0),Vector(0,1,0)))
+		b2 = b.mirror(Vector(ac.frameringxlen/2+ac.beamSize/2,0,0),Vector(1,0,0))
+		b2.rotate(Vector(ac.frameringxlen/2+ac.beamSize/2,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2,0),Vector(0,0,1),90)
+		b = b.fuse(b2)
 	return b
 
 #Printed
-def MountPlate():
-	bb = Part.makeBox(ac.minthick,ac.beamSize,ac.frameringczpos - ac.framezsupportszpos + ac.beamSize)
-	bb.translate(Vector(0,-ac.beamSize/2,-(ac.frameringczpos - ac.framezsupportszpos + ac.beamSize)/2))
-	bb=bb.makeFillet(ac.beamSize/2-0.01,[bb.Edges[8],bb.Edges[9],bb.Edges[10],bb.Edges[11]])
-	#mount holes
-	mh = CapHeadScrew(l=8,d=ps.m3l[0],hd=ps.m3l[1],hh=ps.m3l[2]-3,cut=1)
-	mh.rotate(Vector(0,0,0),Vector(0,1,0),-90)
-	mh.translate(Vector(ps.m3l[2],0,(ac.frameringczpos - ac.framezsupportszpos + ac.beamSize)/2-ac.beamSize/2))
-	mh=mh.fuse(mh.mirror(Vector(0,0,0),Vector(0,0,1)))
-	
-	mp = bb.cut(mh)
-	
-	if positionOnMachine == 1:
-		mp.translate(Vector(-ac.frameringxlen/2-ac.beamSize-ac.minthick,-10,(ac.frameringczpos+ac.framezsupportszpos)/2))
-	if makeDual == 1:
-		mp = mp.fuse(mp.mirror(Vector(0,0,0),Vector(0,1,0)))
-	return mp
 
 def ExtruderDriver():
 	xsize = gearDia/2+35/2 + fittingDia/2 + ac.minthick/2+8
@@ -326,14 +321,22 @@ def ExtruderDriver():
 		d.translate(Vector(0,0,xsize+filamentDia/2-ac.beamSize/2-0.1))
 		ib.translate(Vector(ps.z623[1]+ac.minthick-0.333,-18,0))
 		ib.rotate(Vector(0,0,0),Vector(0,1,0),-90)
+		ds = d.fuse(ib)
+		if makeDual == 1:
+			ds = ds.fuse(ds.mirror(Vector(0,ac.beamSize-ac.minthick,0),Vector(0,1,0)))
+		return ds
 	else:
 		d.translate(Vector(-(filamentDia/2+gearDia/2+35/2),0,0))
 		ib.translate(Vector(-(filamentDia/2+gearDia/2+35/2),0,0))
+		ds = d.fuse(ib)
 	
-	ds = d.fuse(ib)
+	
 	if positionOnMachine == 1:
-		ds.translate(Vector(-ac.frameringxlen/2-ac.beamSize-ac.minthick,0,(ac.frameringczpos+ac.framezsupportszpos)/2))
+		ds.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		ds.translate(Vector(ac.frameringxlen/2+ac.beamSize+ac.minthick+3,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2+0.5,(ac.frameringczpos+ac.framezsupportszpos)/2+ac.minthick*3))
+	
 	if makeDual == 1:
-		ds = ds.fuse(ds.mirror(Vector(0,10,0),Vector(0,1,0)))
-	#ds = d
+		ds2 = ds.mirror(Vector(ac.frameringxlen/2+ac.beamSize/2,0,0),Vector(1,0,0))
+		ds2.rotate(Vector(ac.frameringxlen/2+ac.beamSize/2,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize/2,0),Vector(0,0,1),90)
+		ds = ds.fuse(ds2)
 	return ds
