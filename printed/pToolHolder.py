@@ -155,23 +155,4 @@ def DualE3d():
         th.translate(Vector(0,-ac.xrodypos/2-1,-ac.xrodzcenter))
         th.rotate(Vector(0,0,0),Vector(1,0,0),-90)
     return th
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   

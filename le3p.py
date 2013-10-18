@@ -61,7 +61,8 @@ from printed import pZMotorMount
 from printed import pBits
 from printed import pZCarriage
 from printed import pToolHolder
-from printed import pExtruderDriver
+from printed import pExtruderDriverBowden
+from printed import pExtruderDriverDirect
 from printed import pCornerBracket
 
 if clear == 1:
@@ -78,7 +79,8 @@ if clear == 1:
 	reload(pZMotorMount)
 	reload(pZCarriage)
 	reload(pToolHolder)
-	reload(pExtruderDriver)
+	reload(pExtruderDriverBowden)
+	reload(pExtruderDriverDirect)
 	reload(pBits)
 	reload(pCornerBracket)
 
@@ -119,7 +121,18 @@ def HotEndFanLayout():
 	th=10
 	fn = Fan(size=sz,thick=th)
 	fn.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen-ac.hotEndMountLen-2.4))
-	fn.translate(Vector(ac.mXpos-sz/2+ac.hotEndDia/2+ac.hotEndSpacing/2, ac.mYpos-th-ac.hotEndDia/2-1.2, ac.envelopeZ-sz+7.5))
+	fn.translate(Vector(ac.mXpos-sz/2+ac.hotEndDia/2+ac.hotEndSpacing/2, ac.mYpos-th-ac.hotEndDia/2-1.2, ac.envelopeZ-sz+2.5))
+
+	fan = fn		
+	return fan
+
+def NozzleFanLayout():
+	sz=30
+	th=10
+	fn = Fan(size=sz,thick=th)
+	fn.rotate(Vector(0,0,0),Vector(1,0,0),0)
+	fn.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen-ac.hotEndMountLen-2.4))
+	fn.translate(Vector(ac.mXpos-sz/2+ac.hotEndDia/2+ac.hotEndSpacing/2, ac.mYpos-th-ac.hotEndDia/2+sz*2, ac.envelopeZ-sz*1.5))
 
 	fan = fn		
 	return fan
@@ -723,7 +736,10 @@ def makeLE3P():
 	# Extruder
 	if dc.showExtruderMotor == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderMotor")
-		tool.Shape = pExtruderDriver.ExtruderMotor()
+		if bc.extruderDriveType == 'Bowden':
+			tool.Shape = pExtruderDriverBowden.ExtruderMotor()
+		if bc.extruderDriveType == 'Direct':
+			tool.Shape = pExtruderDriverDirect.ExtruderMotor()
 		tool.Label = "Extruder Motor"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderMotor").ShapeColor = (0.7,0.7,0.7)
@@ -732,7 +748,10 @@ def makeLE3P():
 			
 	if dc.showExtruderSupportBearing == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderSupportBearing")
-		tool.Shape = pExtruderDriver.ExtruderSupportBearing()
+		if bc.extruderDriveType == 'Bowden':
+			tool.Shape = pExtruderDriverBowden.ExtruderSupportBearing()
+		if bc.extruderDriveType == 'Direct':
+			tool.Shape = pExtruderDriverDirect.ExtruderSupportBearing()
 		tool.Label = "Extruder Support Bearing"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderSupportBearing").ShapeColor = (0.6,0.6,0.7)
@@ -741,7 +760,10 @@ def makeLE3P():
 			
 	if dc.showExtruderDriveGear == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderDriveGear")
-		tool.Shape = pExtruderDriver.ExtruderDriveGear()
+		if bc.extruderDriveType == 'Bowden':
+			tool.Shape = pExtruderDriverBowden.ExtruderDriveGear()
+		if bc.extruderDriveType == 'Direct':
+			tool.Shape = pExtruderDriverDirect.ExtruderDriveGear()
 		tool.Label = "Extruder Drive Gear"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderDriveGear").ShapeColor = (0.6,0.6,0.7)
@@ -750,7 +772,10 @@ def makeLE3P():
 			
 	if dc.showExtruderIdleBearing == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderIdleBearing")
-		tool.Shape = pExtruderDriver.ExtruderIdleBearing()
+		if bc.extruderDriveType == 'Bowden':
+			tool.Shape = pExtruderDriverBowden.ExtruderIdleBearing()
+		if bc.extruderDriveType == 'Direct':
+			tool.Shape = pExtruderDriverDirect.ExtruderIdleBearing()
 		tool.Label = "Extruder Idle Bearing"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderIdleBearing").ShapeColor = (0.6,0.6,0.7)
@@ -995,7 +1020,10 @@ def makeLE3P():
 
 	if dc.showExtruderDriver == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderDriver")
-		tool.Shape = pExtruderDriver.ExtruderDriver()
+		if bc.extruderDriveType == 'Bowden':
+			tool.Shape = pExtruderDriverBowden.ExtruderDriver()
+		if bc.extruderDriveType == 'Direct':
+			tool.Shape = pExtruderDriverDirect.ExtruderDriver()
 		tool.Label = "Extruder Driver"
 		Printed.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderDriver").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
@@ -1005,7 +1033,6 @@ def makeLE3P():
 				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_ExtruderDriver.stl'))
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_ExtruderDriver.stl'))
-			
 			
 	if dc.showSmallCornerBrackets == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "SmallCornerBrackets")
@@ -1119,6 +1146,15 @@ def makeLE3P():
 		FreeCADGui.getDocument("le3p").getObject("HotEndFan").ShapeColor = (0.2,0.2,0.2)
 		if dc.doSTLexport == 1:
 			tool.Shape.exportStl(bc.exportpath % ('electronics/export_HotEndFan.stl'))
+			
+	if dc.showElectronics == 1 and dc.showNozzleFan == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "NozzleFan")
+		tool.Shape = NozzleFanLayout()
+		tool.Label = "Nozzle Fan"
+		Electronics.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("NozzleFan").ShapeColor = (0.2,0.2,0.2)
+		if dc.doSTLexport == 1:
+			tool.Shape.exportStl(bc.exportpath % ('electronics/export_NozzleFan.stl'))
 
 
 def BOM():
@@ -1195,4 +1231,3 @@ if clear == 1:
 
 makeLE3P()
 BOM()
-

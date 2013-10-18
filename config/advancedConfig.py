@@ -54,7 +54,7 @@ class advancedConfig:
 	hotEndMountLen = 1
 	if bc.hotEndType == 'E3Dv4':
 		hotEndDia = 25
-		hotEndLen = 64
+		hotEndLen = 70
 		hotEndSpacing = 5
 		hotEndMountLen = 12
 	

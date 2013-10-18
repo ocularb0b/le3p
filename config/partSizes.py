@@ -34,7 +34,7 @@ class partSizes:
 	m4l = [4.1, 8.1, 3.2]  #m4 lowhead cap
 	m8b = [8.1,12.25,5.2] #m8 bolt
 	
-	m3n = [3,5.4,2] #M3 Nut
+	m3n = [3,5.55,2] #M3 Nut
 	m5n = [5,8,3.8]
 	m8n = [8,12.25,5.2]  #M8 Nut
 	m8tn = [8,12.25,3.2] #M8 Thin Nut

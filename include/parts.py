@@ -165,47 +165,67 @@ def E3Dv4():
 	findia=25
 	b1t=4.7
 	b2t=4.6
-	b3t=3
-	b4t=fin*8
+	b3t=5
+	b4t=fin*10
 	b11t=fin*6
 	b16t=5
 	#built top up (upside down)
 	b1 = Part.makeCylinder(8,b1t)
-	b2 = Part.makeCylinder(6,b1t+b2t)
+	#
+	b2 = Part.makeCylinder(6,b1t+b2t+fin*2)
+	#
 	b3 = Part.makeCylinder(8,b3t)
 	b3.translate(Vector(0,0,b1t+b2t))
-	b4 = Part.makeCylinder(8.93/2,b4t)
+	#
+	b31 = Part.makeCylinder(8,fin)
+	b31.translate(Vector(0,0,b1t+b2t+b3t+fin))
+	#
+	b4 = Part.makeCylinder(8.93/2,b4t+fin*2)
 	b4.translate(Vector(0,0,b1t+b2t+b3t))
+	#
 	b5 = Part.makeCylinder(findia/2,fin)
-	b5.translate(Vector(0,0,b1t+b2t+b3t+fin))
+	b5.translate(Vector(0,0,b1t+b2t+b3t+fin*3))
+	#
 	b6 = Part.makeCylinder(findia/2,fin)
-	b6.translate(Vector(0,0,b1t+b2t+b3t+fin*3))
+	b6.translate(Vector(0,0,b1t+b2t+b3t+fin*5))
+	#
 	b7 = Part.makeCylinder(findia/2,fin)
-	b7.translate(Vector(0,0,b1t+b2t+b3t+fin*5))
+	b7.translate(Vector(0,0,b1t+b2t+b3t+fin*7))
+	#
 	b8 = Part.makeCylinder(findia/2,fin)
-	b8.translate(Vector(0,0,b1t+b2t+b3t+fin*7))
+	b8.translate(Vector(0,0,b1t+b2t+b3t+fin*9))
+	#
 	b9 = Part.makeCylinder(13/2,fin)
 	b9.translate(Vector(0,0,b1t+b2t+b3t+fin*8))
+	#
 	b10 = Part.makeCylinder(findia/2,fin)
-	b10.translate(Vector(0,0,b1t+b2t+b3t+fin*9))
+	b10.translate(Vector(0,0,b1t+b2t+b3t+fin*11))
+	#
 	b11 = Part.makeCylinder(15/2,b11t)
-	b11.translate(Vector(0,0,b1t+b2t+b3t+fin*10))
+	b11.translate(Vector(0,0,b1t+b2t+b3t+fin*11))
+	#
 	b12 = Part.makeCylinder(findia/2,fin)
-	b12.translate(Vector(0,0,b1t+b2t+b3t+fin*11))
+	b12.translate(Vector(0,0,b1t+b2t+b3t+fin*13))
+	#
 	b13 = Part.makeCylinder(findia/2,fin)
-	b13.translate(Vector(0,0,b1t+b2t+b3t+fin*13))
+	b13.translate(Vector(0,0,b1t+b2t+b3t+fin*15))
+	#
 	b14 = Part.makeCylinder(findia/2,fin)
-	b14.translate(Vector(0,0,b1t+b2t+b3t+fin*15))
+	b14.translate(Vector(0,0,b1t+b2t+b3t+fin*17))
+	#
 	b15 = Part.makeCylinder(2.8/2,fin)
-	b15.translate(Vector(0,0,b1t+b2t+b3t+fin*16))
+	b15.translate(Vector(0,0,b1t+b2t+b3t+fin*19))
+	#
 	b16 = Part.makeCylinder(3,b16t)
-	b16.translate(Vector(0,0,b1t+b2t+b3t+fin*17))
+	b16.translate(Vector(0,0,b1t+b2t+b3t+fin*19-b16t))
+	#
 	blk=Part.makeBox(blockx,blocky,blockz)
-	blk.translate(Vector(-blockx/2,-blocky+blockx/2,b1t+b2t+b3t+fin*17))
+	blk.translate(Vector(-blockx/2,-blocky+blockx/2,b1t+b2t+b3t+fin*19))
+	#
 	noz = Part.makeCone(6,0.5,6)
-	noz.translate(Vector(0,0,b1t+b2t+b3t+fin*17+blockz))
+	noz.translate(Vector(0,0,b1t+b2t+b3t+fin*19+blockz))
 	
-	he = b1.fuse(b2.fuse(b3.fuse(b4.fuse(b5.fuse(b6.fuse(b7.fuse(b8.fuse(b9.fuse(b10.fuse(b11.fuse(b12.fuse(b13.fuse(b14.fuse(b15.fuse(b16.fuse(blk.fuse(noz)))))))))))))))))
+	he = b1.fuse(b2.fuse(b3.fuse(b31.fuse(b4.fuse(b5.fuse(b6.fuse(b7.fuse(b8.fuse(b9.fuse(b10.fuse(b11.fuse(b12.fuse(b13.fuse(b14.fuse(b15.fuse(b16.fuse(blk.fuse(noz))))))))))))))))))
 	he.rotate(Vector(0,0,0),Vector(1,0,0),180)
 	return he
 	

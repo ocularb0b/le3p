@@ -43,6 +43,8 @@ class basicConfig():
 
 	hotEndType = 'E3Dv4'  # E3Dv4 
 	
+	extruderDriveType = 'Direct' # 'Bowden' or 'Direct'
+	
 	beltType = 'GT2-2mm'
 
 	BushingType = 'LM10LUU'

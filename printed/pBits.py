@@ -343,7 +343,7 @@ def HotEndFanMount():
 		hef.rotate(Vector(0,0,thick/2),Vector(0,1,0),180)
 	
 	if dc.forPrint == 0:
-		hef.translate(Vector(0,0,ac.envelopeZ + ac.hotEndLen - ac.hotEndMountLen-2.4))
+		hef.translate(Vector(0,0,ac.envelopeZ + ac.hotEndLen - ac.hotEndMountLen-7.4))
 	
 	return hef
 
