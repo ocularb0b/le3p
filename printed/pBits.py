@@ -421,18 +421,51 @@ def SpanPlate(zsize=50,xsize=20):
 	bf = Part.makeBox(xsize,ac.beamSize+1,zsize-ztol*2-platethick*2)
 	bf = bf.makeFillet(ac.beamSize,[bf.Edges[8],bf.Edges[9]])
 	bf.translate(Vector(0,platethick,ztol+platethick))
+	sp = bb.cut(bf)
+	sp = sp.makeFillet(platethick*2,[sp.Edges[20],sp.Edges[21]])
 	
-	dm = bb.cut(bf)
-	dm = dm.makeFillet(platethick*2,[dm.Edges[20],dm.Edges[21]])
+	#Extrusion Nibs
+	en = Part.makeCylinder(1.5,xsize)
+	en.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	en.translate(Vector(0,ac.beamSize/2,ztol))
+	en = en.fuse(en.mirror(Vector(0,0,zsize/2),Vector(0,0,1)))
 	
-	if dc.forPrint == 0:
-		dm.translate(Vector(0,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize,ac.frameringazpos+ac.beamSize/2))
-	return dm
+	sp = sp.fuse(en)
+	
+	return sp
 
 def DimmerMount():
-	sc = SpanPlate(60,50)
+	zsize = 60
+	xsize = 40
+	sc = SpanPlate(zsize,xsize)
 	
-	dm = sc
+	bh = Part.makeBox(ps.m3l[1]+ac.minthick*2,45,ac.minthick*2)
+	bh = bh.makeFillet(ac.minthick,[bh.Edges[2],bh.Edges[6]])
+	bhc = Part.makeBox(ps.m3l[1]+ac.minthick*2,45,ac.minthick*2)
+	bhc = bhc.makeFillet(ac.minthick,[bhc.Edges[9]])
+	bhc.translate(Vector(0,ac.minthick+2,-ac.minthick))
+	bh=bh.cut(bhc)
+	bhs = Part.makeBox(ps.m3l[1],30,ac.minthick)
+	bhs.translate(Vector(ac.minthick,12,ac.minthick))
+	bhs = bhs.makeFillet(ps.m3l[1]/2-0.01,[bhs.Edges[0],bhs.Edges[2],bhs.Edges[4],bhs.Edges[6]])
+	bh=bh.cut(bhs)
+	bh.translate(Vector(-(ps.m3l[1]+ac.minthick*2)/2+xsize/2-1.5,2,4))
+	
+	ph = Part.makeCylinder(7.2/2,ac.minthick)
+	ph.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	ph.translate(Vector(xsize/2,0,zsize/2))
+	
+	dm = sc.fuse(bh)
+	dm = dm.cut(ph)
+	
+	
+	
+	if dc.forPrint == 0:
+		dm.translate(Vector(ac.frameringxlen/3-xsize/2,-ac.frameringylen/2+ac.tailadd/2-ac.beamSize,ac.frameringazpos+ac.beamSize/2))
+	if dc.forPrint == 1:
+		dm.rotate(Vector(0,0,0),Vector(1,0,0),90)
+		dm.translate(Vector(-xsize/2,zsize/2,0))
+		
 	return dm
 
 

@@ -43,13 +43,13 @@ class displayConfig:
 	# Group Toggles
 	showPrintedParts = 1
 	showManufacturedParts = 0
-	showExtruderParts = 1
+	showExtruderParts = 0
 	showBedSurface = 0
-	showFrame = 0
-	showElectronics = 1
+	showFrame = 1
+	showElectronics = 0
 	
 	# Printed Part Toggles
-	showXCarriage = 1
+	showXCarriage = 0
 	showXEnds = 0
 	showYEndsIdle = 0
 	showYEndsMotor = 0
@@ -74,7 +74,7 @@ class displayConfig:
 	showRumbaFanMount = 0
 	showControllerArm = 0
 	showLedBracket = 0
-	showDimmerMount = 0
+	showDimmerMount = 1
 	
 	
 	
