@@ -348,10 +348,10 @@ def HotEndFanMount():
 	return hef
 
 def NozzelFanShroud():
-	
+	fs = Part.makeBox(10,10,10)
 	#if dc.forPrint == 0:
 		#nfs.translate(Vector(-ac.hotEndSpacing/2-ac.hotEndDia/2,0,ac.envelopeZ+torthick/2+1))
-	return 
+	return fs
 
 def PowerSupplyMount(reach=8):
 	xsize = ac.beamSize
@@ -385,6 +385,43 @@ def PowerSupplyMount(reach=8):
 		psamb.translate(Vector(xsize+ac.minthick,0,0))
 	psam=psam.fuse(psamb)
 	return psam
+
+def LedPowerSupplyBracket():
+	psy = 30
+	psz = 20
+	wide = 20
+	thick = 3
+	
+	pb = Part.makeBox(wide,psy+thick*2,psz+thick+ac.beamSize/2 + thick)
+	bc = Part.makeBox(wide,ac.beamSize,ac.beamSize)
+	bc.translate(Vector(0,(psy+thick*2)/2-ac.beamSize/2,-ac.beamSize/2+1.5))
+	pb = pb.cut(bc)
+	
+	pc = Part.makeBox(wide,psy,psz+thick)
+	pc.translate(Vector(0,thick,ac.beamSize/2 + thick + 1.5))
+	pb = pb.cut(pc)
+	
+	fc = Part.makeBox(wide,((psy+thick*2)-ac.beamSize)/2-thick,ac.beamSize/2+1.5)
+	fc = fc.makeFillet(ac.minthick,[fc.Edges[11]])
+	fc = fc.fuse(fc.mirror(Vector(0,(psy+thick*2)/2,0),Vector(0,1,0)))
+	pb = pb.cut(fc)
+	pb = pb.makeFillet(thick-0.01,[pb.Edges[51],pb.Edges[21],pb.Edges[1],pb.Edges[46],pb.Edges[43],pb.Edges[42]])
+	
+	bt = Part.makeCylinder(3/2,wide)
+	bt.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	bt.translate(Vector(0,((psy+thick*2)-ac.beamSize)/2,1.5))
+	bt = bt.fuse(bt.mirror(Vector(0,(psy+thick*2)/2,0),Vector(0,1,0)))
+	pb = pb.fuse(bt)
+	
+	pt = Part.makeCylinder(thick/2,wide)
+	pt.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	pt.translate(Vector(0,thick,psz+thick+ac.beamSize/2 + thick/2))
+	pt = pt.fuse(pt.mirror(Vector(0,(psy+thick*2)/2,0),Vector(0,1,0)))
+	pb = pb.fuse(pt)
+	
+	
+	pb.translate(Vector(0,ac.framezmotorsupportsspacing/2-(psy+thick*2)/2,ac.frameringazpos-1.5))
+	return pb
 
 def ControllerArm():
 	tall = 12
