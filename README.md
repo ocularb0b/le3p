@@ -16,7 +16,8 @@ Mechanics are solid and acurate.
 Still working and getting great settings for the extruders.
 I'm waiting on a relay that I'll use for the bed heater. Waiting for the bed to heat up has cost me a ton of time.
 
-Not all of the printed parts are properly placed for printing in the STL files.  So check the orientation before printing anything.
+Not all of the printed parts are properly placed for printing in the STL files.  
+So check the orientation before printing anything.
 I'm working on cleaning up the code and I'll make some basic instructions for using the script very soon.
 
 
