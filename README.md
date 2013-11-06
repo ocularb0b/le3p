@@ -8,7 +8,7 @@ This is a RepRap printer in so far as it can replicate many of it's parts. It ha
 
 # Status
 I've built this machine as configured by default and it is working.
-Mechanics are solid and acurate.
+Mechanics are solid and accurate.
 Still working and getting great settings for the extruders.
 I'm waiting on a relay that I'll use for the bed heater. Waiting for the bed to heat up has cost me a ton of time.
 
