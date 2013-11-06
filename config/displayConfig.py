@@ -29,10 +29,10 @@ class displayConfig:
 # STL generation ##############################################################################################
 	doSTLexport = 1
 	# Display #####################################################################################################
-	printedOnly = 1 #will only export STL's for printed parts
-	forPrint = 1 #will turn off all but printed parts and place for printing
+	printedOnly = 0 #will only export STL's for printed parts
+	forPrint = 0 #will turn off all but printed parts and place for printing
 	noMirror = 0
-	showAll = 0
+	showAll = 1
 	
 	# Machine Position
 	xPos = 239/2
