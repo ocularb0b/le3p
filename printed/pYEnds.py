@@ -87,6 +87,10 @@ def yEndMotor():
     rc = rc.makeFillet(ac.minthick,[rc.Edges[5]])
     yem = yem.cut(rc)
     
+    if dc.forPrint == 1:
+        yem.translate(Vector(ac.frameringxlen/2+2,-ac.yrodlen/2 + ac.beamSize - ac.tailadd/2,-ac.yrodzpos + bc.gantryRodDia/2))
+        yem.rotate(Vector(0,0,0),Vector(1,0,0),90)
+    
     if dc.noMirror == 0:
         yem = yem.fuse(yem.mirror(Vector(0,0,0),Vector(1,0,0)))
     return yem

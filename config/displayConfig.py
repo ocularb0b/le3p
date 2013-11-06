@@ -29,10 +29,10 @@ class displayConfig:
 # STL generation ##############################################################################################
 	doSTLexport = 1
 	# Display #####################################################################################################
-	printedOnly = 0 #will only export STL's for printed parts
-	forPrint = 0 #will turn off all but printed parts and place for printing
+	printedOnly = 1 #will only export STL's for printed parts
+	forPrint = 1 #will turn off all but printed parts and place for printing
 	noMirror = 0
-	showAll = 1
+	showAll = 0
 	
 	# Machine Position
 	xPos = 239/2
@@ -49,11 +49,11 @@ class displayConfig:
 	showElectronics = 1
 	
 	# Printed Part Toggles
-	showXCarriage = 1
+	showXCarriage = 0
 	showXEnds = 0
 	showYEndsIdle = 0
 	showYEndsMotor = 0
-	showZEndsUpper = 0
+	showZEndsUpper = 1
 	showGantryMotorMounts = 0
 	showZMotorMounts = 0
 	showZCarriage = 0
@@ -68,7 +68,7 @@ class displayConfig:
 	showYStop = 0
 	showXStop = 0
 	showHotEndFanMount = 0
-	showNozzleFanShroud = 1
+	showNozzleFanShroud = 0
 	showPowerSupplyAMount = 0
 	showRumbaMount = 0
 	showRumbaFanMount = 0

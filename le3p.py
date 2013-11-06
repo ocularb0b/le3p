@@ -539,14 +539,15 @@ def makeLE3P():
 	Extruder = doc.addObject("App::DocumentObjectGroup",  "Extruder")
 	Electronics = doc.addObject("App::DocumentObjectGroup",  "Electronics")
 	
-	if dc.showHotEnds == 1 or dc.showAll == 1:
-		tool=doc.addObject("Part::Feature",  "HotEnds")
-		tool.Shape = HotEndsLayout()
-		tool.Label = "Hot Ends"
-		Extruder.addObject(tool)
-		FreeCADGui.getDocument("le3p").getObject("HotEnds").ShapeColor = (0.6,0.6,0.6)
-		if dc.doSTLexport == 1 and dc.printedOnly == 0:
-			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_HotEnds.stl'))
+	if dc.printedOnly == 0:
+		if dc.showHotEnds == 1 or dc.showAll == 1:
+			tool=doc.addObject("Part::Feature",  "HotEnds")
+			tool.Shape = HotEndsLayout()
+			tool.Label = "Hot Ends"
+			Extruder.addObject(tool)
+			FreeCADGui.getDocument("le3p").getObject("HotEnds").ShapeColor = (0.6,0.6,0.6)
+			if dc.doSTLexport == 1 and dc.printedOnly == 0:
+				tool.Shape.exportStl(bc.exportpath % ('manufactured/export_HotEnds.stl'))
 		
 	#Bed
 	#if dc.showBedSurface == 1:
