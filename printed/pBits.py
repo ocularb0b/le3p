@@ -32,6 +32,7 @@ from config import partSizes
 from include.parts import CapHeadScrew
 from include.shapes import TSlot
 from include.shapes import regPolygon
+from include.shapes import LE3Plogolong
 
 bc = basicConfig.basicConfig()
 dc = displayConfig.displayConfig()
@@ -505,5 +506,132 @@ def DimmerMount():
 		
 	return dm
 
+def VertConduitSeg(type=0):
+	tall = 83
+	#Beam Clip
+	cl = BeamClip(tall)
+	cl.rotate(Vector(0,0,0),Vector(0,0,1),180)
+	clc = Part.makeCylinder(tall/3,ac.beamSize*2)
+	clc.translate(Vector(0,0,-ac.beamSize))
+	clc.rotate(Vector(0,0,0),Vector(1,0,0),90)
+	clc.translate(Vector(ac.beamSize*1.5,0,0))
+	clc = clc.fuse(clc.mirror(Vector(0,0,tall/2),Vector(0,0,1)))
+	clcy = clc.copy()
+	clcy.rotate(Vector(0,0,0),Vector(0,0,1),90)
+	clc = clc.fuse(clcy)
+	cl = cl.cut(clc)
+	#Body
+	size = 30
+	thick = 3
+	ob = Part.makeCylinder(size,tall,Vector(0,0,0),Vector(0,0,1),90)
+	ob.rotate(Vector(0,0,0),Vector(0,0,1),180)
+	ob.translate(Vector(-ac.beamSize/2,-ac.beamSize/2,0))
+	ob = ob.makeFillet(ac.beamSize/2,[ob.Edges[1],ob.Edges[3]])
+	ob = ob.makeFillet(ac.beamSize/5,[ob.Edges[14]])
+	
+	oc = Part.makeCylinder(size-thick*2,tall,Vector(0,0,0),Vector(0,0,1),90)
+	oc.rotate(Vector(0,0,0),Vector(0,0,1),180)
+	oc.translate(Vector(-ac.beamSize/2-thick*0.75,-ac.beamSize/2-thick*0.75,0))
+	oc = oc.makeFillet(ac.beamSize/2-thick,[oc.Edges[1],oc.Edges[3]])
+	oc = oc.makeFillet(ac.beamSize/5,[oc.Edges[14]])
+	
+	cb = ob.cut(oc)
+	
+	vc = cl.fuse(cb)
+	
+	#male side clip
+	bendthick = 1.5
+	bendtall = 2
+	over = 4
+	ball = 1.5
+	ctall = ball + bendtall + over
+	cwide = 10 
+	msc = Part.makeBox(cwide,bendthick+ball,ctall)
+	msc = msc.makeFillet(bendtall,[msc.Edges[3],msc.Edges[7]])
+	msc = msc.makeFillet((bendthick+ball)-0.01,[msc.Edges[4]])
+	bc = Part.makeBox(cwide,ball,bendtall)
+	bc.translate(Vector(0,bendthick,over))
+	msc = msc.cut(bc)
+	
+	msc = msc.makeFillet(ball/2-0.01,[msc.Edges[35],msc.Edges[40],msc.Edges[31]])
+	
+	
+	msc.translate(Vector(-cwide/2,-bendthick-ball-thick/2,tall-over)) 
+	
+	mscy = msc.copy()
+	mscy.translate(Vector(-size/2-ac.beamSize/2,-ac.beamSize/2,0))
+	
+	mscx = msc.copy()
+	mscx.rotate(Vector(0,0,0),Vector(0,0,1),-90)
+	mscx.translate(Vector(-ac.beamSize/2,-size/2-ac.beamSize/2,0))
+	
+	mscset = mscy.fuse(mscx)
+	
+	#female side clip
+	tol = 1.1
+	fsc = Part.makeCylinder((ball*tol)/2,cwide*tol)
+	fsc.translate(Vector(0,0,-(cwide*tol)/2))
+	fsc.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	
+	fscy = fsc.copy()
+	fscy.translate(Vector(-size/2 - ac.beamSize/2,-ac.beamSize/2-thick+0.5,bendtall+ball/2))
+	
+	fscx = fsc.copy()
+	fscx.rotate(Vector(0,0,0),Vector(0,0,1),90)
+	fscx.translate(Vector(-ac.beamSize/2-thick+0.5,-size/2 - ac.beamSize/2,bendtall+ball/2))
+	
+	fscset = fscy.fuse(fscx)
+	
+	if type == 1:
+		logosize=20
+		logothick = 2.5
+		logo = LE3Plogolong(logosize,logothick)
+		logo.translate(Vector(-logosize,-logothick/2,0))
+		logo.rotate(Vector(0,0,0),Vector(0,1,0),-90)
+		logo.rotate(Vector(0,0,0),Vector(0,0,1),-45)
+		logo.translate(Vector(-size+9,-size-4.8,tall/2))
+		vc = vc.cut(logo)
+		
+	if type < 2:
+		vc = vc.fuse(mscset)
+	
+	if type < 3:
+		vc = vc.cut(fscset)
+	
+	if dc.forPrint == 0:
+		vc.translate(Vector(ac.frameringxlen/2 + ac.beamSize/2,ac.frameringylen/2 + ac.beamSize/2 + ac.tailadd/2,ac.frameringbzpos+tall/9))
+	
+	
+	
+	return vc
 
-
+def VertConduit():
+	tall = 83
+	spacing = 10
+	if dc.forPrint == 0:
+		a = VertConduitSeg(type = 0)
+		b = VertConduitSeg(type = 0)
+		b.translate(Vector(0,0,tall))
+		c = VertConduitSeg(type = 0)
+		c.translate(Vector(0,0,tall*2))
+		d = VertConduitSeg(type = 2)
+		d.translate(Vector(0,0,tall*3))
+		vcs = a.fuse(b.fuse(c.fuse(d)))
+		
+	if dc.forPrint == 1:
+		a = VertConduitSeg(type = 0)
+		b = VertConduitSeg(type = 0)
+		b.rotate(Vector(0,0,0),Vector(0,0,1),-90)
+		b.translate(Vector(0,spacing,0))
+		c = VertConduitSeg(type = 0)
+		c.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		c.translate(Vector(spacing,spacing,0))
+		d = VertConduitSeg(type = 2)
+		d.rotate(Vector(0,0,0),Vector(0,0,1),90)
+		d.translate(Vector(spacing,0,0))
+		vcs = a.fuse(b.fuse(c.fuse(d)))
+		vcs.rotate(Vector(0,0,0),Vector(0,0,1),-90)
+	
+	
+	return vcs
+	

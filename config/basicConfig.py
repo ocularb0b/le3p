@@ -25,7 +25,7 @@ import sys
 
 class basicConfig():
     #important stuff
-	exportpath = "/PATH/YOU/WANT/TO/EXPORT/STL/FILES"
+	exportpath = "stls/%s"
 	
 	#Machine Size
 	#bedSize is the size of the build surface: glass plate, garolite sheet, etc.
@@ -43,7 +43,7 @@ class basicConfig():
 
 	hotEndType = 'E3Dv4'  # E3Dv4 
 	
-	extruderDriveType = 'Direct' # 'Bowden' or 'Direct'
+	extruderDriveType = 'Direct' # 'Bowden'
 	
 	beltType = 'GT2-2mm'
 

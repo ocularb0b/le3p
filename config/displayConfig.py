@@ -43,10 +43,10 @@ class displayConfig:
 	# Group Toggles
 	showPrintedParts = 1
 	showManufacturedParts = 0
-	showExtruderParts = 1
+	showExtruderParts = 0
 	showBedSurface = 0
-	showFrame = 1
-	showElectronics = 1
+	showFrame = 0
+	showElectronics = 0
 	
 	# Printed Part Toggles
 	showXCarriage = 0
@@ -63,8 +63,6 @@ class displayConfig:
 	#	Frame Brackets
 	showSmallCornerBrackets = 0
 	#	Bits
-	showCableGuides = 0
-	showCableClips = 0
 	showYStop = 0
 	showXStop = 0
 	showHotEndFanMount = 0
@@ -76,22 +74,23 @@ class displayConfig:
 	showLedBracket = 0
 	showLedPowerSupplyBracket = 0
 	showDimmerMount = 0
+	showVertConduit = 0
 	
 	
 	
 	# Frame Toggles
-	showFrameUprights = 0
+	showFrameUprights = 1
 	showFrameRingA = 0
-	showFrameRingB = 0
+	showFrameRingB = 1
 	showFrameRingC = 0
 	showFrameYRodSupports = 0
-	showFrameZRodSupports = 0
+	showFrameZRodSupports = 1
 	showFrameZMotorSupports = 0
 
 	# Part Toggles
-	showHotEnds = 1
-	showHotEndFan = 1
-	showNozzleFan = 1
+	showHotEnds = 0
+	showHotEndFan = 0
+	showNozzleFan = 0
 	
 	# Gantry Parts
 	showXRods = 1
@@ -149,7 +148,7 @@ class displayConfig:
 	#print1B = 0.3
 	print1A = 0
 	
-	print2R = 0.6
-	print2G = 0.6
-	print2B = 0.6
+	print2R = 0.2
+	print2G = 0.2
+	print2B = 0.2
 	print2A = 0

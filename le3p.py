@@ -926,27 +926,7 @@ def makeLE3P():
 				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_ZMotorMounts.stl'))
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_ZMotorMounts.stl'))
-	
-	if dc.showCableGuides == 1 and dc.showPrintedParts == 1:
-		tool=doc.addObject("Part::Feature",  "CableGuides")
-		tool.Shape = CableGuidesLayout()
-		tool.Label = "Cable Guides"
-		Printed.addObject(tool)
-		FreeCADGui.getDocument("le3p").getObject("CableGuides").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
-		FreeCADGui.getDocument("le3p").getObject("CableGuides").Transparency = (dc.print1A)
-		if dc.doSTLexport == 1:
-			tool.Shape.exportStl(bc.exportpath % ('printed/export_CableGuides.stl'))
-			
-	if dc.showCableClips == 1 and dc.showPrintedParts == 1:
-		tool=doc.addObject("Part::Feature",  "CableClips")
-		tool.Shape = CableClipsLayout()
-		tool.Label = "Cable Clips"
-		Printed.addObject(tool)
-		FreeCADGui.getDocument("le3p").getObject("CableClips").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
-		FreeCADGui.getDocument("le3p").getObject("CableClips").Transparency = (dc.print1A)
-		if dc.doSTLexport == 1:
-			tool.Shape.exportStl(bc.exportpath % ('printed/forprint_CableClips.stl'))
-			
+					
 	if dc.showHotEndFanMount == 1 and dc.showPrintedParts == 1:
 		tool=doc.addObject("Part::Feature",  "HotEndFanMount")
 		tool.Shape = HotEndFanMountLayout()
@@ -1120,6 +1100,19 @@ def makeLE3P():
 				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_DimmerMount.stl'))
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_DimmerMount.stl'))
+				
+	if dc.showVertConduit == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "VertConduit")
+		tool.Shape = pBits.VertConduit()
+		tool.Label = "Vert Conduit"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("VertConduit").ShapeColor = (dc.print2R,dc.print2G,dc.print2B)
+		FreeCADGui.getDocument("le3p").getObject("VertConduit").Transparency = (dc.print2A)
+		if dc.doSTLexport == 1:
+			if dc.forPrint == 1:
+				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_VertConduit.stl'))
+			else:
+				tool.Shape.exportStl(bc.exportpath % ('printed/export_VertConduit.stl'))
 
 	# Electronics
 	if dc.showElectronics == 1 and dc.showPowerSupplies == 1 or dc.showAll == 1:
