@@ -27,6 +27,8 @@ from FreeCAD import Base
 from FreeCAD import Vector
 from math import pi, cos, sin
 
+from include.shapes import regPolygon
+
 def BoxExtrusion(size=5, length=40):
   
 	blank=Part.makeBox(length, size, size)
@@ -90,6 +92,33 @@ def StraightBushing(dim=[10,20,20]):
 	bo = Part.makeCylinder(dim[1]/2,dim[2])
 	bi = Part.makeCylinder(dim[0]/2,dim[2])
 	b = bo.cut(bi)
+	return b
+
+def BronzeBushing10mm():
+	od1 = 12
+	od2 = 14
+	fd = 16
+	ft = 1
+	ind = 10
+	l = 12
+	
+	bb = Part.makeCone(od1/2,od2/2,l)
+	th = Part.makeCylinder(ind/2,l)
+	fl = Part.makeCylinder(fd/2,ft)
+	
+	b = bb.fuse(fl)
+	b = b.cut(th)
+	return b
+
+def SleaveBushing10mm():
+	od1 = 12
+	od2 = 13
+	ind = 10
+	l = 10
+	
+	bb = Part.makeCone(od1/2,od2/2,l)
+	th = Part.makeCylinder(ind/2,l)
+	b = bb.cut(th)
 	return b
 
 def Bearing(dim=[4,13,5]):
@@ -156,6 +185,82 @@ def Fan(size=40,thick=10.75,screwdia=3.25,screwspacing=32):
 	fan = fan.fuse(fh)
 	fan = fan.fuse(bls)
 	return fan
+
+def Kraken():
+	xsize = 40
+	ysize = 35
+	zsize = 20
+	msoffset = 3
+	msdia = 3
+	msoffset = 3
+	msdeep = 10
+	whdia = 8.5
+	whoffset = 10
+	whdeep = 15
+	fhdia = 8
+	fhoffset = 7.5
+	nheight = 5.5
+	ndia = 8
+	nnutheight = 3
+	nconeheight = 2
+	hbrdia = 2.8
+	hhbx = 16
+	hhby = 16
+	hhbz = 12
+	hhboffset = 4
+	
+	hbheight = 20
+	
+	bb = Part.makeBox(xsize,ysize,zsize)
+	bb.translate(Vector(-xsize/2,-ysize/2,0))
+	
+	ms = Part.makeCylinder(msdia/2,msdeep)
+	ms.translate(Vector(xsize/2-msoffset,ysize/2-msoffset,zsize - msdeep))
+	ms = ms.fuse(ms.mirror(Vector(0,0,0),Vector(1,0,0)))
+	ms = ms.fuse(ms.mirror(Vector(0,0,0),Vector(0,1,0)))
+	
+	wh = Part.makeCylinder(whdia/2,whdeep)
+	wh.translate(Vector(xsize/2 - whoffset,0,zsize - whdeep))
+	wh = wh.fuse(wh.mirror(Vector(0,0,0),Vector(1,0,0)))
+	
+	fh = Part.makeCylinder(fhdia/2,zsize)
+	fh.translate(Vector(xsize/2 - whoffset,ysize/2 - fhoffset,2))
+	fh = fh.fuse(fh.mirror(Vector(0,0,0),Vector(1,0,0)))
+	fh = fh.fuse(fh.mirror(Vector(0,0,0),Vector(0,1,0)))
+	
+	hhb = Part.makeBox(hhbx,hhby,hhbz)
+	hhb.translate(Vector(-hhbx/2,-hhbx+hhboffset,0))
+	hhbhb = Part.makeCylinder(hbrdia/2,5)
+	hhbhb.translate(Vector(0,0,hhbz))
+	hhb = hhb.fuse(hhbhb)
+	hhb.translate(Vector(xsize/2 - whoffset,ysize/2 - fhoffset,0))
+	hhb = hhb.fuse(hhb.mirror(Vector(0,0,0),Vector(1,0,0)))
+	hhbr2 = hhb.copy()
+	hhbr2.translate(Vector(0,fhoffset*2 - ysize,0))
+	hhb = hhb.fuse(hhbr2)
+	hhb.translate(Vector(0,0,nheight))
+	
+	nzc = Part.makeCone(0.6,3,nconeheight)
+	nzn = regPolygon(6,ndia/2,extrude = nnutheight)
+	nzn.translate(Vector(0,0,nconeheight))
+	nzs = Part.makeCylinder(3,10)
+	nzs.translate(Vector(0,0,nconeheight+nnutheight))
+	
+	nz = nzc.fuse(nzn.fuse(nzs))
+	nz.translate(Vector(xsize/2 - whoffset,ysize/2 - fhoffset,0))
+	nz = nz.fuse(nz.mirror(Vector(0,0,0),Vector(1,0,0)))
+	nz = nz.fuse(nz.mirror(Vector(0,0,0),Vector(0,1,0)))
+	
+	hb = bb.cut(ms)
+	hb = hb.cut(wh)
+	hb = hb.cut(fh)
+	hb.translate(Vector(0,0,hbheight))
+	
+	kraken = hb.fuse(hhb)
+	kraken = kraken.fuse(nz)
+	
+	return kraken
+	
 
 def E3Dv4():
 	blockx = 14

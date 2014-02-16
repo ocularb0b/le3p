@@ -27,25 +27,25 @@ import sys
 
 class displayConfig:
 # STL generation ##############################################################################################
-	doSTLexport = 1
+	doSTLexport = 0
 	# Display #####################################################################################################
 	printedOnly = 0 #will only export STL's for printed parts
 	forPrint = 0 #will turn off all but printed parts and place for printing
 	noMirror = 0
-	showAll = 1
+	showAll = 0
 	
 	# Machine Position
-	xPos = 239/2
-	yPos = 269/2
-	zPos = 125#250
+	xPos = 267/2
+	yPos = 269.5/2
+	zPos = 65#250
 
 	# Items to display ############################################################################################
 	# Group Toggles
 	showPrintedParts = 1
-	showManufacturedParts = 0
-	showExtruderParts = 0
-	showBedSurface = 0
-	showFrame = 0
+	showManufacturedParts = 1
+	showExtruderParts = 1
+	showBedSurface = 1
+	showFrame = 1
 	showElectronics = 0
 	
 	# Printed Part Toggles
@@ -53,7 +53,7 @@ class displayConfig:
 	showXEnds = 0
 	showYEndsIdle = 0
 	showYEndsMotor = 0
-	showZEndsUpper = 1
+	showZEndsUpper = 0
 	showGantryMotorMounts = 0
 	showZMotorMounts = 0
 	showZCarriage = 0
@@ -80,36 +80,36 @@ class displayConfig:
 	
 	# Frame Toggles
 	showFrameUprights = 1
-	showFrameRingA = 0
+	showFrameRingA = 1
 	showFrameRingB = 1
-	showFrameRingC = 0
-	showFrameYRodSupports = 0
+	showFrameRingC = 1
+	showFrameYRodSupports = 1
 	showFrameZRodSupports = 1
-	showFrameZMotorSupports = 0
+	showFrameZMotorSupports = 1
 
 	# Part Toggles
-	showHotEnds = 0
+	showHotEnds = 1
 	showHotEndFan = 0
 	showNozzleFan = 0
 	
 	# Gantry Parts
-	showXRods = 1
-	showXBushings = 1
-	showYRods = 1
-	showYBushings = 1
+	showXRods = 0
+	showXBushings = 0
+	showYRods = 0
+	showYBushings = 0
 	
-	showGantryMotors = 1
-	showGantryAIdlers = 1
-	showGantryBIdlers = 1
-	showGantryCIdlers = 1
-	showGantryBelt = 1
+	showGantryMotors = 0
+	showGantryAIdlers = 0
+	showGantryBIdlers = 0
+	showGantryCIdlers = 0
+	showGantryBelt = 0
 		
 	# Z Stage
-	showZRods = 1
-	showZScrews = 1
-	showZMotors = 1
-	showZBushings = 1
-	showZLeadNuts = 1
+	showZRods = 0
+	showZScrews = 0
+	showZMotors = 0
+	showZBushings = 0
+	showZLeadNuts = 0
 	
 	# Extruder Parts
 	showExtruderIdleBearing = 0

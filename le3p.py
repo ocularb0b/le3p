@@ -26,6 +26,7 @@ from FreeCAD import Vector
 from FreeCAD import Matrix
 
 from include.parts import E3Dv4
+from include.parts import Kraken
 from include.parts import BoxExtrusion
 from include.parts import CapHeadScrew
 from include.parts import NemaMotor
@@ -102,19 +103,26 @@ if dc.forPrint == 1:
 
 # Manufactured Parts
 def HotEndsLayout():
-	t1 = E3Dv4()
-	t1.rotate(Vector(0,0,0),Vector(0,0,1),90)
-	t1.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen))
-	t1.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ))
-
-	t2 = E3Dv4()
-	t2.rotate(Vector(0,0,0),Vector(0,0,1),90)
-	t2.translate(Vector(ac.hotEndDia/2 + ac.hotEndSpacing/2,0, ac.hotEndLen))
-	t2.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ))
-		
-	f1 = t1.fuse(t2)
-	ts=f1		
-	return ts
+	if bc.hotEndType == 'DualE3Dv4':
+		t1 = E3Dv4()
+		t1.rotate(Vector(0,0,0),Vector(0,0,1),90)
+		t1.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen))
+		t1.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ))
+	
+		t2 = E3Dv4()
+		t2.rotate(Vector(0,0,0),Vector(0,0,1),90)
+		t2.translate(Vector(ac.hotEndDia/2 + ac.hotEndSpacing/2,0, ac.hotEndLen))
+		t2.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ))
+			
+		f1 = t1.fuse(t2)
+		ts=f1		
+		return ts
+	if bc.hotEndType == 'Kraken':
+		t = Kraken()
+		t.rotate(Vector(0,0,0),Vector(0,0,1),180)
+		t.translate(Vector(ac.mXpos, ac.mYpos, ac.envelopeZ - 65))
+		return t
+	
 
 def HotEndFanLayout():
 	sz=40
@@ -144,6 +152,16 @@ def XRodsLayout():
 	xr.translate(Vector(-ac.xrodlen/2,ac.xrodypos,ac.xrodzcenter+ac.xrodspacing/2))
 	xr2=xr.copy()
 	xr2.translate(Vector(0,0,-ac.xrodspacing))
+	xr=xr.fuse(xr2)
+	xr.translate(Vector(0,ac.mYpos,0))
+	return xr
+
+def XRodsUltiLayout():
+	xr=Part.makeCylinder(bc.gantryRodDia/2,ac.xrodlen)
+	xr.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	xr.translate(Vector(-ac.xrodlen/2,ac.frameringylen/2,ac.xrodzcenter))
+	xr2=xr.copy()
+	xr2.translate(Vector(0,-ac.frameringylen+ac.tailadd,0))
 	xr=xr.fuse(xr2)
 	xr.translate(Vector(0,ac.mYpos,0))
 	return xr
@@ -603,7 +621,10 @@ def makeLE3P():
 	#Gantry
 	if dc.showXRods == 1 and dc.showManufacturedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "XRods")
-		tool.Shape = XRodsLayout()
+		if bc.gantryType == 'Hgantry':
+			tool.Shape = XRodsLayout()
+		if bc.gantryType == 'UltiStyle':
+			tool.Shape = XRodsUltiLayout()
 		tool.Label = "X Rods"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("XRods").ShapeColor = (dc.rodsR,dc.rodsG,dc.rodsB)

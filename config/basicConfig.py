@@ -25,7 +25,7 @@ import sys
 
 class basicConfig():
     #important stuff
-	exportpath = "stls/%s"
+	exportpath = "/home/scott/Projects/eclipseworkspace/le3p/stls/%s"
 	
 	#Machine Size
 	#bedSize is the size of the build surface: glass plate, garolite sheet, etc.
@@ -37,11 +37,13 @@ class basicConfig():
 	
 	extraBed = 18 # This is to add a bit of border around the bed for clamping(added to all sides)
 	
+	gantryType = 'UltiStyle' #or 'Hgantry'
+	
 	#Parts to Use
 	beamType = 'OpenBeam'
 	#beamType = 'Misumi20mm'
 
-	hotEndType = 'E3Dv4'  # E3Dv4 
+	hotEndType = 'Kraken'  #or DualE3Dv4 
 	
 	extruderDriveType = 'Direct' # 'Bowden'
 	

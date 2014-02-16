@@ -606,7 +606,7 @@ def VertConduitSeg(type=0):
 	return vc
 
 def VertConduit():
-	tall = 83
+	tall = 72
 	spacing = 10
 	if dc.forPrint == 0:
 		a = VertConduitSeg(type = 0)
@@ -619,8 +619,8 @@ def VertConduit():
 		vcs = a.fuse(b.fuse(c.fuse(d)))
 		
 	if dc.forPrint == 1:
-		a = VertConduitSeg(type = 0)
-		b = VertConduitSeg(type = 0)
+		a = VertConduitSeg(type = 2)
+		b = VertConduitSeg(type = 2)
 		b.rotate(Vector(0,0,0),Vector(0,0,1),-90)
 		b.translate(Vector(0,spacing,0))
 		c = VertConduitSeg(type = 0)
@@ -633,5 +633,5 @@ def VertConduit():
 		vcs.rotate(Vector(0,0,0),Vector(0,0,1),-90)
 	
 	
-	return vcs
+	return a.fuse(b)
 	

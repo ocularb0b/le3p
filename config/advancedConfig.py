@@ -36,7 +36,7 @@ from config import partSizes
 ps = partSizes.partSizes()
 
 class advancedConfig:
-  #Globals
+	#Globals
 	minthick = 5
 	
 	#Beam
@@ -73,6 +73,8 @@ class advancedConfig:
 	xBushing = [1,1,1]
 	yBushing = [1,1,1]
 	zBushing = [1,1,1]
+	
+	
 	
 	#xbushing
 	if bc.BushingType == 'LM10LUU':
@@ -204,6 +206,10 @@ class advancedConfig:
 	gantrycidlerypos = xrodypos + bc.gantryIdlerDia/2 + beltThick + beltSpace/2 + gantrybcidlerspacing
 	
 	beltLen = (gantrymotorypos - gantryaidlerypos)*4 + (gantrybidlerxpos)*4
+	
+	#Ulti Gantry 
+	ugXrodHeight = xrodzcenter
+	
 	
 	#Z Stage
 	zrodlen = framezsupportszpos - frameringazpos + beamSize
