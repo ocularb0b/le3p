@@ -27,10 +27,10 @@ import sys
 
 class displayConfig:
 # STL generation ##############################################################################################
-	doSTLexport = 0
+	doSTLexport = 1
 	# Display #####################################################################################################
-	printedOnly = 0 #will only export STL's for printed parts
-	forPrint = 0 #will turn off all but printed parts and place for printing
+	printedOnly = 1 #will only export STL's for printed parts
+	forPrint = 1 #will turn off all but printed parts and place for printing
 	noMirror = 0
 	showAll = 0
 	
@@ -42,10 +42,10 @@ class displayConfig:
 	# Items to display ############################################################################################
 	# Group Toggles
 	showPrintedParts = 1
-	showManufacturedParts = 1
-	showExtruderParts = 1
-	showBedSurface = 1
-	showFrame = 1
+	showManufacturedParts = 0
+	showExtruderParts = 0
+	showBedSurface = 0
+	showFrame = 0
 	showElectronics = 0
 	
 	# Printed Part Toggles
@@ -59,6 +59,7 @@ class displayConfig:
 	showZCarriage = 0
 	showToolHolder = 0
 	showExtruderDriver = 0
+	showExtruderIdler = 0
 	
 	#	Frame Brackets
 	showSmallCornerBrackets = 0
@@ -75,35 +76,48 @@ class displayConfig:
 	showLedPowerSupplyBracket = 0
 	showDimmerMount = 0
 	showVertConduit = 0
+	showDialIndicatorHolder = 1
 	
 	
 	
 	# Frame Toggles
 	showFrameUprights = 1
-	showFrameRingA = 1
-	showFrameRingB = 1
+	showFrameRingA = 0
+	showFrameRingB = 0
 	showFrameRingC = 1
 	showFrameYRodSupports = 1
 	showFrameZRodSupports = 1
-	showFrameZMotorSupports = 1
+	showFrameZMotorSupports = 0
 
 	# Part Toggles
-	showHotEnds = 1
+	showHotEnds = 0
 	showHotEndFan = 0
 	showNozzleFan = 0
 	
 	# Gantry Parts
-	showXRods = 0
+	showXRods = 1
 	showXBushings = 0
-	showYRods = 0
+	showYRods = 1
 	showYBushings = 0
 	
-	showGantryMotors = 0
-	showGantryAIdlers = 0
+	showGantryMotors = 1
+	showGantryAIdlers = 0  
 	showGantryBIdlers = 0
 	showGantryCIdlers = 0
 	showGantryBelt = 0
-		
+	
+	# Ulti Gantry Parts
+	showUgXLiveBearing = 1
+	showUgXDeadBearing = 1
+	showUgYLiveBearing = 1
+	showUgYDeadBearing = 1
+	
+	showUgXCarriageRod = 1
+	showUgYCarriageRod = 1
+	
+	showUgXPullies = 1
+	showUgYPullies = 1
+	
 	# Z Stage
 	showZRods = 0
 	showZScrews = 0
@@ -112,10 +126,12 @@ class displayConfig:
 	showZLeadNuts = 0
 	
 	# Extruder Parts
-	showExtruderIdleBearing = 0
-	showExtruderMotor = 0
-	showExtruderDriveGear = 0
+	showExtruderIdleBearing = 1
+	showExtruderMotor = 1
+	showExtruderDriveGear = 1
 	showExtruderSupportBearing = 0
+	showExtruderScrews = 1
+	showExtruderIdleScrew = 1
 	
 	
 	# Electronics Toggles
@@ -151,4 +167,4 @@ class displayConfig:
 	print2R = 0.2
 	print2G = 0.2
 	print2B = 0.2
-	print2A = 0
+	print2A = 50

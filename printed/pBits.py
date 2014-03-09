@@ -214,18 +214,19 @@ def yStop():
 
 def xStop():
 	gapmod=2
-	rc = Part.makeCylinder(bc.gantryRodDia/2+ac.minthick,ac.minthick)
+	thick = 12
+	rc = Part.makeCylinder(bc.gantryRodDia/2+ac.minthick,thick)
 	rc.rotate(Vector(0,0,0),Vector(0,1,0),90)
 	rc.translate(Vector(0,0,ac.xrodspacing/2))
 	rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,0,1)))
-	bb = Part.makeBox(ac.minthick,ac.minthick,ac.xrodspacing)
+	bb = Part.makeBox(thick,ac.minthick,ac.xrodspacing)
 	bb.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/2))
-	es = Part.makeBox(ac.minthick,ac.minthick+bc.gantryRodDia,ac.xrodspacing/4)
+	es = Part.makeBox(thick,ac.minthick+bc.gantryRodDia,ac.xrodspacing/4)
 	es.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/5))
 	es = es.makeFillet(ac.minthick,[es.Edges[10],es.Edges[11]])
-	cs = Part.makeBox(ac.minthick,bc.gantryRodDia/2+ac.minthick,bc.gantryRodDia-gapmod)
+	cs = Part.makeBox(thick,bc.gantryRodDia/2+ac.minthick,bc.gantryRodDia-gapmod)
 	cs.translate(Vector(0,0,-(bc.gantryRodDia-gapmod)/2+ac.xrodspacing/2))
-	rd = Part.makeCylinder(bc.gantryRodDia/2,ac.minthick)
+	rd = Part.makeCylinder(bc.gantryRodDia/2,thick)
 	rd.rotate(Vector(0,0,0),Vector(0,1,0),90)
 	rd.translate(Vector(0,0,ac.xrodspacing/2))
 	rd=rd.fuse(cs)
@@ -241,8 +242,74 @@ def xStop():
 		xs.translate(Vector(-ac.xrodlen/2+50,ac.xrodypos,ac.xrodzcenter))
 	else:
 		xs.rotate(Vector(0,0,0),Vector(0,1,0),90)
-		xs.translate(Vector(0,0,ac.minthick))
+		xs.translate(Vector(0,0,thick))
 	return xs
+
+def DialIndicatorHolder():
+	gapmod=2
+	thick = 40
+	clampscrewdia = 6.8
+	clampscrewlen = 47
+	clampscrewshoulder = 6.5
+	clampscrewshoulderlen = 3
+	
+	mountx = 6.5
+	mounty = 18
+	mountz = 18
+	mountxcenter = 12
+	mountzcenter = -15
+	mountycenter = 0
+	
+	outerz = ac.xrodspacing/2 + bc.gantryRodDia/2 + ac.minthick
+	
+	rc = Part.makeCylinder(bc.gantryRodDia/2+ac.minthick,thick)
+	rc.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	rc.translate(Vector(0,0,ac.xrodspacing/2))
+	rc = rc.fuse(rc.mirror(Vector(0,0,0),Vector(0,0,1)))
+	bb = Part.makeBox(thick,ac.minthick,outerz*2)
+	bb = bb.makeFillet(ac.minthick,[bb.Edges[1],bb.Edges[3],bb.Edges[5],bb.Edges[7]])
+	bb.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-outerz))
+	es = Part.makeBox(thick,ac.minthick+bc.gantryRodDia+4.25,ac.xrodspacing/2)
+	es.translate(Vector(0,-bc.gantryRodDia/2-ac.minthick,-ac.xrodspacing/2))
+	es = es.makeFillet(ac.minthick,[es.Edges[11]])
+	cs = Part.makeBox(thick,bc.gantryRodDia/2+ac.minthick,bc.gantryRodDia-gapmod)
+	cs.translate(Vector(0,0,-(bc.gantryRodDia-gapmod)/2+ac.xrodspacing/2))
+	rd = Part.makeCylinder(bc.gantryRodDia/2,thick)
+	rd.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	rd.translate(Vector(0,0,ac.xrodspacing/2))
+	rd=rd.fuse(cs)
+	rd = rd.fuse(rd.mirror(Vector(0,0,0),Vector(0,0,1)))
+	#clamp screw
+	cs = Part.makeCylinder(clampscrewdia/2,clampscrewlen)
+	cs.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	cs.translate(Vector(clampscrewshoulderlen,mountycenter,mountzcenter))
+	csh = Part.makeBox(clampscrewshoulderlen,clampscrewshoulder,clampscrewshoulder)
+	csh.translate(Vector(0,-clampscrewshoulder/2,-clampscrewshoulder/2))
+	csh.translate(Vector(0,mountycenter,mountzcenter))
+	cs=cs.fuse(csh)
+	#dial indicator slot
+	di = Part.makeBox(mountx,mounty+10,mountz)
+	di.translate(Vector(-mountx/2,0,-mountz/2))
+	di.translate(Vector(mountxcenter,-bc.gantryRodDia/2-ac.minthick,mountzcenter))
+	
+	xs = rc.fuse(bb)
+	xs = xs.fuse(es)
+	xs = xs.cut(rd)
+	xs = xs.cut(cs)
+	xs = xs.cut(di)
+	
+	xs = xs.makeFillet(bc.gantryRodDia/2-0.01,[xs.Edges[114],xs.Edges[115]])
+	xs = xs.makeFillet(ac.minthick/2,[xs.Edges[56],xs.Edges[80],xs.Edges[138],xs.Edges[163]])
+	
+	
+	
+	if dc.forPrint == 0:
+		#xs.translate(Vector(-ac.xrodlen/2+50,ac.xrodypos,ac.xrodzcenter))
+		return xs
+	else:
+		xs.rotate(Vector(0,0,0),Vector(1,0,0),90)
+		xs.translate(Vector(0,0,bc.gantryRodDia/2+ac.minthick))
+		return xs
 
 def RumbaMount():
 	ysize = 60

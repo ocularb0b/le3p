@@ -45,7 +45,7 @@ class basicConfig():
 
 	hotEndType = 'Kraken'  #or DualE3Dv4 
 	
-	extruderDriveType = 'Direct' # 'Bowden'
+	extruderDriveType = 'DirectNEMA17' # 'DirectPG35'
 	
 	beltType = 'GT2-2mm'
 

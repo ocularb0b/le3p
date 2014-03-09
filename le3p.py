@@ -62,8 +62,8 @@ from printed import pZMotorMount
 from printed import pBits
 from printed import pZCarriage
 from printed import pToolHolder
-from printed import pExtruderDriverBowden
-from printed import pExtruderDriverDirect
+from printed import pExtruderDriverDirectPG35
+from printed import pExtruderDriverDirectNEMA17
 from printed import pCornerBracket
 
 if clear == 1:
@@ -80,8 +80,8 @@ if clear == 1:
 	reload(pZMotorMount)
 	reload(pZCarriage)
 	reload(pToolHolder)
-	reload(pExtruderDriverBowden)
-	reload(pExtruderDriverDirect)
+	reload(pExtruderDriverDirectPG35)
+	reload(pExtruderDriverDirectNEMA17)
 	reload(pBits)
 	reload(pCornerBracket)
 
@@ -152,16 +152,6 @@ def XRodsLayout():
 	xr.translate(Vector(-ac.xrodlen/2,ac.xrodypos,ac.xrodzcenter+ac.xrodspacing/2))
 	xr2=xr.copy()
 	xr2.translate(Vector(0,0,-ac.xrodspacing))
-	xr=xr.fuse(xr2)
-	xr.translate(Vector(0,ac.mYpos,0))
-	return xr
-
-def XRodsUltiLayout():
-	xr=Part.makeCylinder(bc.gantryRodDia/2,ac.xrodlen)
-	xr.rotate(Vector(0,0,0),Vector(0,1,0),90)
-	xr.translate(Vector(-ac.xrodlen/2,ac.frameringylen/2,ac.xrodzcenter))
-	xr2=xr.copy()
-	xr2.translate(Vector(0,-ac.frameringylen+ac.tailadd,0))
 	xr=xr.fuse(xr2)
 	xr.translate(Vector(0,ac.mYpos,0))
 	return xr
@@ -262,6 +252,139 @@ def GantryBeltLayout():
 	gb=gb.fuse(gb.mirror(Vector(0,0,0),Vector(1,0,0)))
 	gb=gb.fuse(bi2bi.fuse(ci2ci))
 	return gb
+
+
+
+# Ulti Gantry
+def XRodsUltiLayout():
+	xr=Part.makeCylinder(bc.gantryRodDia/2,ac.xrodlen)
+	xrde=Part.makeCylinder(8/2,ac.beamSize)
+	xrde.translate(Vector(0,0,-ac.beamSize))
+	xr = xr.fuse(xrde)
+	xrse=Part.makeCylinder(8/2,ac.beamSize)
+	xrse.translate(Vector(0,0,ac.xrodlen))
+	xr = xr.fuse(xrse)
+	
+	xr.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	xr.translate(Vector(-ac.xrodlen/2 + ac.beamSize/2,ac.frameringylen/2 + ac.tailadd/2-ps.z6800[1]/2-ac.minthick/2,ac.ugGantryCenter-ac.ugGantryRodSpacing/2))
+	
+	xr2=Part.makeCylinder(bc.gantryRodDia/2,ac.xrodlen)
+	xrde=Part.makeCylinder(8/2,ac.beamSize)
+	xrde.translate(Vector(0,0,-ac.beamSize))
+	xr2 = xr2.fuse(xrde)
+	xr2.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	xr2.translate(Vector(-ac.xrodlen/2 + ac.beamSize/2,-ac.frameringylen/2 + ac.tailadd/2+ps.z6800[1]/2+ac.minthick/2,ac.ugGantryCenter-ac.ugGantryRodSpacing/2))
+	
+	xr=xr.fuse(xr2)
+	xr.translate(Vector(0,0,0))
+	return xr
+
+def YRodsUltiLayout():
+	yr=Part.makeCylinder(bc.gantryRodDia/2,ac.yrodlen - ac.beamSize)
+	yrde=Part.makeCylinder(8/2,ac.beamSize)
+	yrde.translate(Vector(0,0,-ac.beamSize))
+	yr = yr.fuse(yrde)
+	
+	yr.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	yr.translate(Vector(ac.frameringxlen/2-ps.z6800[1]/2-ac.minthick/2,-ac.yrodlen/2+ac.beamSize,ac.ugGantryCenter+ac.ugGantryRodSpacing/2))
+	
+	yr2=Part.makeCylinder(bc.gantryRodDia/2,ac.yrodlen - ac.beamSize)
+	yrde=Part.makeCylinder(8/2,ac.beamSize)
+	yrde.translate(Vector(0,0,-ac.beamSize))
+	yr2 = yr2.fuse(yrde)
+	yrse=Part.makeCylinder(8/2,ac.beamSize)
+	yrse.translate(Vector(0,0,ac.yrodlen - ac.beamSize))
+	yr2 = yr2.fuse(yrse)
+	
+	yr2.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	yr2.translate(Vector(-ac.frameringxlen/2+ps.z6800[1]/2+ac.minthick/2,-ac.yrodlen/2+ac.beamSize,ac.ugGantryCenter+ac.ugGantryRodSpacing/2))
+	
+	yr=yr.fuse(yr2)
+	yr.translate(Vector(0,ac.tailadd/2,0))
+	return yr
+
+def GantryMotorsUltiLayout():
+	gmx = NemaMotor(ac.gantryMotor)
+	gmx.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	gmx.translate(Vector(-ac.frameringxlen/2 + ps.nema17x48[0]/2 + ac.minthick,ac.frameringylen/2 + ac.tailadd/2+ac.beamSize/2,ac.ugGantryMotorZpos + 24))
+	
+	gmy = NemaMotor(ac.gantryMotor)
+	gmy.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	gmy.translate(Vector(ac.frameringxlen/2 + ac.beamSize/2,ac.frameringylen/2 - ac.minthick,ac.ugGantryMotorZpos - ac.minthick))
+	
+	gm = gmx.fuse(gmy)
+	return gm
+
+def UgXCarriageRodLayout():
+	ro = Part.makeCylinder(bc.gantryRodDia/2,ac.frameringxlen)
+	ri = Part.makeCylinder(bc.gantryRodDia/2-2,ac.frameringxlen)
+	xr = ro.cut(ri)
+	xr.translate(Vector(0,0,-ac.frameringxlen/2))
+	xr.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	xr.translate(Vector(0,0,ac.ugGantryCenter-ac.ugGantryRodSpacing/2))
+	
+	cr = xr
+	return cr
+
+def UgYCarriageRodLayout():
+	ro = Part.makeCylinder(bc.gantryRodDia/2,ac.frameringylen)
+	ri = Part.makeCylinder(bc.gantryRodDia/2-2,ac.frameringylen)
+	yr = ro.cut(ri)
+	yr.translate(Vector(0,0,-ac.frameringylen/2))
+	yr.rotate(Vector(0,0,0),Vector(1,0,0),90)
+	yr.translate(Vector(0,ac.tailadd/2,ac.ugGantryCenter+ac.ugGantryRodSpacing/2))
+	
+	cr = yr
+	return cr
+
+def UgXDeadBearingLayout():
+	bo = Bearing(ps.z688)
+	bo.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	bo.translate(Vector(-ac.xrodlen/2 - ac.beamSize/2,ac.frameringylen/2 + ac.tailadd/2-ps.z6800[1]/2-ac.minthick/2,ac.ugGantryCenter-ac.ugGantryRodSpacing/2))
+	bi = bo.copy()
+	bi.translate(Vector(10,0,0))
+	
+	bs = bi.fuse(bo)
+	bs = bs.fuse(bs.mirror(Vector(0,ac.tailadd/2,0),Vector(0,1,0)))
+	return bs
+
+def UgXLiveBearingLayout():
+	bo = Bearing(ps.z6800)
+	bo.rotate(Vector(0,0,0),Vector(0,1,0),90)
+	bo.translate(Vector(ac.xrodlen/2 - ac.beamSize/2,ac.frameringylen/2 + ac.tailadd/2-ps.z6800[1]/2-ac.minthick/2,ac.ugGantryCenter-ac.ugGantryRodSpacing/2))
+	
+	bs=bo
+	bs = bs.fuse(bs.mirror(Vector(0,ac.tailadd/2,0),Vector(0,1,0)))
+	return bs
+
+def UgYDeadBearingLayout():
+	bo = Bearing(ps.z688)
+	bo.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	bo.translate(Vector(ac.frameringxlen/2-ps.z6800[1]/2-ac.minthick/2,-ac.yrodlen/2+ac.beamSize+1.25+5,ac.ugGantryCenter+ac.ugGantryRodSpacing/2))
+	bi = bo.copy()
+	bi.translate(Vector(0,10,0))
+	
+	bs = bi.fuse(bo)
+	bs = bs.fuse(bs.mirror(Vector(0,0,0),Vector(1,0,0)))
+	return bs
+
+def UgYLiveBearingLayout():
+	bo = Bearing(ps.z6800)
+	bo.rotate(Vector(0,0,0),Vector(1,0,0),-90)
+	bo.translate(Vector(ac.frameringxlen/2-ps.z6800[1]/2-ac.minthick/2,ac.yrodlen/2+1.25+5,ac.ugGantryCenter+ac.ugGantryRodSpacing/2))
+	
+	bs = bo
+	bs = bs.fuse(bs.mirror(Vector(0,0,0),Vector(1,0,0)))
+	return bs
+
+def UgXPulliesLayout():
+	pdia = 18
+	pa = Part.makeCylinder(pdia/2,20)
+	pab = Part.makeCylinder(5/2,20)
+	pa = pa.cut(pab)
+	
+	ps = pa
+	return ps
 
 # Z motion
 def ZRodsLayout():
@@ -642,7 +765,10 @@ def makeLE3P():
 		
 	if dc.showYRods == 1 and dc.showManufacturedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "YRods")
-		tool.Shape = YRodsLayout()
+		if bc.gantryType == 'Hgantry':
+			tool.Shape = YRodsLayout()
+		if bc.gantryType == 'UltiStyle':
+			tool.Shape = YRodsUltiLayout()
 		tool.Label = "Y Rods"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("YRods").ShapeColor = (dc.rodsR,dc.rodsG,dc.rodsB)
@@ -660,7 +786,10 @@ def makeLE3P():
 		
 	if dc.showGantryMotors == 1 and dc.showManufacturedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "GantryMotors")
-		tool.Shape = GantryMotorsLayout()
+		if bc.gantryType == 'Hgantry':
+			tool.Shape = GantryMotorsLayout()
+		if bc.gantryType == 'UltiStyle':
+			tool.Shape = GantryMotorsUltiLayout()
 		tool.Label = "Gantry Motors"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("GantryMotors").ShapeColor = (0.15,0.15,0.15)
@@ -702,6 +831,70 @@ def makeLE3P():
 		FreeCADGui.getDocument("le3p").getObject("GantryBelt").ShapeColor = (dc.beltR,dc.beltG,dc.beltB)
 		if dc.doSTLexport == 1 and dc.printedOnly == 0:
 			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_GantryBelt.stl'))
+	
+	# UltiGantry Only
+	if dc.showUgXCarriageRod == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "XCarriageRod")
+		tool.Shape = UgXCarriageRodLayout()
+		tool.Label = "X CarriageRod"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("XCarriageRod").ShapeColor = (dc.rodsR,dc.rodsG,dc.rodsB)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_XCarriageRod.stl'))
+			
+	if dc.showUgYCarriageRod == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "YCarriageRod")
+		tool.Shape = UgYCarriageRodLayout()
+		tool.Label = "Y CarriageRod"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("YCarriageRod").ShapeColor = (dc.rodsR,dc.rodsG,dc.rodsB)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_YCarriageRod.stl'))
+	
+	if dc.showUgXDeadBearing == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "GantryXDeadBearing")
+		tool.Shape = UgXDeadBearingLayout()
+		tool.Label = "Gantry X Dead Bearing"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("GantryXDeadBearing").ShapeColor = (0.7,0.7,0.9)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_GantryXDeadBearing.stl'))
+			
+	if dc.showUgXLiveBearing == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "GantryXLiveBearing")
+		tool.Shape = UgXLiveBearingLayout()
+		tool.Label = "Gantry X Live Bearing"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("GantryXLiveBearing").ShapeColor = (0.7,0.7,0.9)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_GantryXLiveBearing.stl'))
+			
+	if dc.showUgYDeadBearing == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "GantryYDeadBearing")
+		tool.Shape = UgYDeadBearingLayout()
+		tool.Label = "Gantry Y Dead Bearing"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("GantryYDeadBearing").ShapeColor = (0.7,0.7,0.9)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_GantryYDeadBearing.stl'))
+			
+	if dc.showUgYLiveBearing == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "GantryYLiveBearing")
+		tool.Shape = UgYLiveBearingLayout()
+		tool.Label = "Gantry Y Live Bearing"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("GantryYLiveBearing").ShapeColor = (0.7,0.7,0.9)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_GantryYLiveBearing.stl'))
+			
+	if dc.showUgXPullies == 1 and dc.showManufacturedParts == 1 and bc.gantryType == 'UltiStyle':
+		tool=doc.addObject("Part::Feature",  "GantryXPullies")
+		tool.Shape = UgXPulliesLayout()
+		tool.Label = "Gantry X Pullies"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("GantryXPullies").ShapeColor = (0.7,0.7,0.9)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_GantryXPullies.stl'))
 	
 	# Z Motion
 	if dc.showZRods == 1 and dc.showManufacturedParts == 1 or dc.showAll == 1:
@@ -758,22 +951,37 @@ def makeLE3P():
 	# Extruder
 	if dc.showExtruderMotor == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderMotor")
-		if bc.extruderDriveType == 'Bowden':
-			tool.Shape = pExtruderDriverBowden.ExtruderMotor()
-		if bc.extruderDriveType == 'Direct':
-			tool.Shape = pExtruderDriverDirect.ExtruderMotor()
+		if bc.extruderDriveType == 'DirectPG35':
+			tool.Shape = pExtruderDriverDirectPG35.ExtruderMotor()
+		if bc.extruderDriveType == 'DirectNEMA17':
+			tool.Shape = pExtruderDriverDirectNEMA17.ExtruderMotor()
 		tool.Label = "Extruder Motor"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderMotor").ShapeColor = (0.7,0.7,0.7)
 		if dc.doSTLexport == 1 and dc.printedOnly == 0:
 			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_ExtruderMotor.stl'))
 			
-	if dc.showExtruderSupportBearing == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
+	if dc.showExtruderScrews == 1 and dc.showExtruderParts == 1 or dc.showAll == 1 and bc.extruderDriveType == 'DirectNEMA17':
+		tool=doc.addObject("Part::Feature",  "ExtruderScrews")
+		tool.Shape = pExtruderDriverDirectNEMA17.ExtruderScrews()
+		tool.Label = "Extruder Screws"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("ExtruderScrews").ShapeColor = (0.6,0.6,0.7)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_ExtruderScrews.stl'))
+			
+	if dc.showExtruderIdleScrew == 1 and dc.showExtruderParts == 1 or dc.showAll == 1 and bc.extruderDriveType == 'DirectNEMA17':
+		tool=doc.addObject("Part::Feature",  "ExtruderIdleScrew")
+		tool.Shape = pExtruderDriverDirectNEMA17.ExtruderIdleScrew()
+		tool.Label = "Extruder Idle Screw"
+		Motion.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("ExtruderIdleScrew").ShapeColor = (0.6,0.6,0.7)
+		if dc.doSTLexport == 1 and dc.printedOnly == 0:
+			tool.Shape.exportStl(bc.exportpath % ('manufactured/export_ExtruderIdleScrew.stl'))
+	
+	if dc.showExtruderSupportBearing == 1 and dc.showExtruderParts == 1 or dc.showAll == 1 and bc.extruderDriveType == 'DirectPG35':
 		tool=doc.addObject("Part::Feature",  "ExtruderSupportBearing")
-		if bc.extruderDriveType == 'Bowden':
-			tool.Shape = pExtruderDriverBowden.ExtruderSupportBearing()
-		if bc.extruderDriveType == 'Direct':
-			tool.Shape = pExtruderDriverDirect.ExtruderSupportBearing()
+		tool.Shape = pExtruderDriverDirectPG35.ExtruderSupportBearing()
 		tool.Label = "Extruder Support Bearing"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderSupportBearing").ShapeColor = (0.6,0.6,0.7)
@@ -782,10 +990,10 @@ def makeLE3P():
 			
 	if dc.showExtruderDriveGear == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderDriveGear")
-		if bc.extruderDriveType == 'Bowden':
-			tool.Shape = pExtruderDriverBowden.ExtruderDriveGear()
-		if bc.extruderDriveType == 'Direct':
-			tool.Shape = pExtruderDriverDirect.ExtruderDriveGear()
+		if bc.extruderDriveType == 'DirectPG35':
+			tool.Shape = pExtruderDriverDirectPG35.ExtruderDriveGear()
+		if bc.extruderDriveType == 'DirectNEMA17':
+			tool.Shape = pExtruderDriverDirectNEMA17.ExtruderDriveGear()
 		tool.Label = "Extruder Drive Gear"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderDriveGear").ShapeColor = (0.6,0.6,0.7)
@@ -794,10 +1002,10 @@ def makeLE3P():
 			
 	if dc.showExtruderIdleBearing == 1 and dc.showExtruderParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderIdleBearing")
-		if bc.extruderDriveType == 'Bowden':
-			tool.Shape = pExtruderDriverBowden.ExtruderIdleBearing()
-		if bc.extruderDriveType == 'Direct':
-			tool.Shape = pExtruderDriverDirect.ExtruderIdleBearing()
+		if bc.extruderDriveType == 'DirectPG35':
+			tool.Shape = pExtruderDriverDirectPG35.ExtruderIdleBearing()
+		if bc.extruderDriveType == 'DirectNEMA17':
+			tool.Shape = pExtruderDriverDirectNEMA17.ExtruderIdleBearing()
 		tool.Label = "Extruder Idle Bearing"
 		Motion.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderIdleBearing").ShapeColor = (0.6,0.6,0.7)
@@ -1022,10 +1230,10 @@ def makeLE3P():
 
 	if dc.showExtruderDriver == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "ExtruderDriver")
-		if bc.extruderDriveType == 'Bowden':
-			tool.Shape = pExtruderDriverBowden.ExtruderDriver()
-		if bc.extruderDriveType == 'Direct':
-			tool.Shape = pExtruderDriverDirect.ExtruderDriver()
+		if bc.extruderDriveType == 'DirectPG35':
+			tool.Shape = pExtruderDriverDirectPG35.ExtruderDriver()
+		if bc.extruderDriveType == 'DirectNEMA17':
+			tool.Shape = pExtruderDriverDirectNEMA17.ExtruderDriver()
 		tool.Label = "Extruder Driver"
 		Printed.addObject(tool)
 		FreeCADGui.getDocument("le3p").getObject("ExtruderDriver").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
@@ -1035,6 +1243,19 @@ def makeLE3P():
 				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_ExtruderDriver.stl'))
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_ExtruderDriver.stl'))
+				
+	if dc.showExtruderIdler == 1 and dc.showPrintedParts == 1 or dc.showAll == 1 and bc.extruderDriveType == 'DirectNEMA17':
+		tool=doc.addObject("Part::Feature",  "ExtruderIdler")
+		tool.Shape = pExtruderDriverDirectNEMA17.ExtruderIdler()
+		tool.Label = "Extruder Idler"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("ExtruderIdler").ShapeColor = (dc.print1R,dc.print1G,dc.print1B)
+		FreeCADGui.getDocument("le3p").getObject("ExtruderIdler").Transparency = (dc.print1A)
+		if dc.doSTLexport == 1:
+			if dc.forPrint == 1:
+				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_ExtruderIdler.stl'))
+			else:
+				tool.Shape.exportStl(bc.exportpath % ('printed/export_ExtruderIdler.stl'))
 			
 	if dc.showSmallCornerBrackets == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
 		tool=doc.addObject("Part::Feature",  "SmallCornerBrackets")
@@ -1134,6 +1355,19 @@ def makeLE3P():
 				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_VertConduit.stl'))
 			else:
 				tool.Shape.exportStl(bc.exportpath % ('printed/export_VertConduit.stl'))
+				
+	if dc.showDialIndicatorHolder == 1 and dc.showPrintedParts == 1 or dc.showAll == 1:
+		tool=doc.addObject("Part::Feature",  "DialIndicatorHolder")
+		tool.Shape = pBits.DialIndicatorHolder()
+		tool.Label = "Dial Indicator Holder"
+		Printed.addObject(tool)
+		FreeCADGui.getDocument("le3p").getObject("DialIndicatorHolder").ShapeColor = (dc.print2R,dc.print2G,dc.print2B)
+		FreeCADGui.getDocument("le3p").getObject("DialIndicatorHolder").Transparency = (dc.print2A)
+		if dc.doSTLexport == 1:
+			if dc.forPrint == 1:
+				tool.Shape.exportStl(bc.exportpath % ('printed/forprint_DialIndicatorHolder.stl'))
+			else:
+				tool.Shape.exportStl(bc.exportpath % ('printed/export_DialIndicatorHolder.stl'))
 
 	# Electronics
 	if dc.showElectronics == 1 and dc.showPowerSupplies == 1 or dc.showAll == 1:

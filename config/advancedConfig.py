@@ -208,7 +208,10 @@ class advancedConfig:
 	beltLen = (gantrymotorypos - gantryaidlerypos)*4 + (gantrybidlerxpos)*4
 	
 	#Ulti Gantry 
-	ugXrodHeight = xrodzcenter
+	ugGantryCenter = xrodzcenter
+	ugGantryRodSpacing = 14
+	ugGantryTransitBearings = ps.z6800
+	ugGantryMotorZpos = framezsupportszpos - ps.nema17x48[0]/2 - beamSize/2 - minthick
 	
 	
 	#Z Stage

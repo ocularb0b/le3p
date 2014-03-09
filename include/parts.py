@@ -95,12 +95,12 @@ def StraightBushing(dim=[10,20,20]):
 	return b
 
 def BronzeBushing10mm():
-	od1 = 12
-	od2 = 14
-	fd = 16
+	od1 = 15
+	od2 = 17
+	fd = 17.5
 	ft = 1
 	ind = 10
-	l = 12
+	l = 10
 	
 	bb = Part.makeCone(od1/2,od2/2,l)
 	th = Part.makeCylinder(ind/2,l)
