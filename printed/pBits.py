@@ -368,7 +368,7 @@ def RumbaFanMount():
 	rfm = rfm.fuse(os)
 	return rfm
 
-def HotEndFanMount():
+def HotEndFanMountOld():
 	fansize = 40
 	screwspacing = 32
 	thick = 7
@@ -411,7 +411,46 @@ def HotEndFanMount():
 		hef.rotate(Vector(0,0,thick/2),Vector(0,1,0),180)
 	
 	if dc.forPrint == 0:
-		hef.translate(Vector(0,0,ac.envelopeZ + ac.hotEndLen - ac.hotEndMountLen-7.4))
+		hef.translate(Vector(ac.mXpos,ac.mYpos,ac.envelopeZ + ac.hotEndLen - ac.hotEndMountLen-7.4))
+	
+	return hef
+
+def HotEndFanMount():
+	fansize = 40
+	screwspacing = 32
+	thick = 3
+	space = 5
+	hemountdia = 25
+	fanoffset = 3
+	
+	#Body Blank
+	bb = Part.makeBox(ac.hotEndDia*2+space*2+thick*2+ac.hotEndSpacing,ac.hotEndDia+space*2+thick*2,fansize+thick)
+	bb.translate(Vector(-(ac.hotEndDia*2+space*2+thick*2+ac.hotEndSpacing)/2,-(ac.hotEndDia+space*2+thick*2)/2,-ac.hotEndLen+18))
+	bb = bb.makeFillet((ac.hotEndDia+space*2+thick*2)/2-0.01,[bb.Edges[0],bb.Edges[2],bb.Edges[4],bb.Edges[6]])
+	#Back fat
+	bf = Part.makeBox(ac.hotEndDia*2+space*2+thick*2+ac.hotEndSpacing,ac.hotEndDia+space*2+thick*2,fansize+thick)
+	bf.translate(Vector(-(ac.hotEndDia*2+space*2+thick*2+ac.hotEndSpacing)/2,+(ac.hotEndDia+space*2+thick*2)/2-space,-ac.hotEndLen+18))
+	bb = bb.cut(bf)
+	bb = bb.makeFillet((ac.hotEndDia+space+thick)/2,[bb.Edges[14],bb.Edges[20]])
+	
+	#main cut
+	mc = Part.makeBox(ac.hotEndDia*2+space*2+ac.hotEndSpacing,ac.hotEndDia+space*2,fansize+thick)
+	mc.translate(Vector(-(ac.hotEndDia*2+space*2+ac.hotEndSpacing)/2,-(ac.hotEndDia+space*2)/2,-ac.hotEndLen+18+thick))
+	mc = mc.makeFillet((ac.hotEndDia+space*2)/2-0.01,[mc.Edges[0],mc.Edges[2],mc.Edges[4],mc.Edges[6]])
+	#Back fat
+	mcbf = Part.makeBox(ac.hotEndDia*2+space*2+ac.hotEndSpacing,ac.hotEndDia+space*2,fansize+thick)
+	mcbf.translate(Vector(-(ac.hotEndDia*2+space*2+ac.hotEndSpacing)/2,+(ac.hotEndDia+space*2)/2-space,-ac.hotEndLen+18+thick))
+	mc = mc.cut(mcbf)
+	mc = mc.makeFillet((ac.hotEndDia+space)/2-1,[mc.Edges[14],mc.Edges[20]])
+	
+	hef = bb.cut(mc)
+	
+	if dc.forPrint == 1:
+		#hef.rotate(Vector(0,0,thick/2),Vector(0,1,0),180)
+		return hef
+	
+	if dc.forPrint == 0:
+		hef.translate(Vector(ac.mXpos,ac.mYpos,ac.envelopeZ + ac.hotEndLen))
 	
 	return hef
 

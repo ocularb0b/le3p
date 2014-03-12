@@ -29,8 +29,8 @@ class displayConfig:
 # STL generation ##############################################################################################
 	doSTLexport = 1
 	# Display #####################################################################################################
-	printedOnly = 1 #will only export STL's for printed parts
-	forPrint = 1 #will turn off all but printed parts and place for printing
+	printedOnly = 0 #will only export STL's for printed parts
+	forPrint = 0 #will turn off all but printed parts and place for printing
 	noMirror = 0
 	showAll = 0
 	
@@ -42,11 +42,11 @@ class displayConfig:
 	# Items to display ############################################################################################
 	# Group Toggles
 	showPrintedParts = 1
-	showManufacturedParts = 0
+	showManufacturedParts = 1
 	showExtruderParts = 0
 	showBedSurface = 0
 	showFrame = 0
-	showElectronics = 0
+	showElectronics = 1
 	
 	# Printed Part Toggles
 	showXCarriage = 0
@@ -66,7 +66,7 @@ class displayConfig:
 	#	Bits
 	showYStop = 0
 	showXStop = 0
-	showHotEndFanMount = 0
+	showHotEndFanMount = 1
 	showNozzleFanShroud = 0
 	showPowerSupplyAMount = 0
 	showRumbaMount = 0
@@ -76,7 +76,7 @@ class displayConfig:
 	showLedPowerSupplyBracket = 0
 	showDimmerMount = 0
 	showVertConduit = 0
-	showDialIndicatorHolder = 1
+	showDialIndicatorHolder = 0
 	
 	
 	
@@ -90,17 +90,17 @@ class displayConfig:
 	showFrameZMotorSupports = 0
 
 	# Part Toggles
-	showHotEnds = 0
-	showHotEndFan = 0
+	showHotEnds = 1
+	showHotEndFan = 1
 	showNozzleFan = 0
 	
 	# Gantry Parts
-	showXRods = 1
+	showXRods = 0
 	showXBushings = 0
-	showYRods = 1
+	showYRods = 0
 	showYBushings = 0
 	
-	showGantryMotors = 1
+	showGantryMotors = 0
 	showGantryAIdlers = 0  
 	showGantryBIdlers = 0
 	showGantryCIdlers = 0

@@ -37,13 +37,13 @@ class basicConfig():
 	
 	extraBed = 18 # This is to add a bit of border around the bed for clamping(added to all sides)
 	
-	gantryType = 'UltiStyle' #or 'Hgantry'
+	gantryType = 'Hgantry' #UltiStyle or 'Hgantry'
 	
 	#Parts to Use
 	beamType = 'OpenBeam'
 	#beamType = 'Misumi20mm'
 
-	hotEndType = 'Kraken'  #or DualE3Dv4 
+	hotEndType = 'DualE3Dv4'  #DualE3Dv4 Kraken
 	
 	extruderDriveType = 'DirectNEMA17' # 'DirectPG35'
 	

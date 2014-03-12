@@ -127,9 +127,10 @@ def HotEndsLayout():
 def HotEndFanLayout():
 	sz=40
 	th=10
+	dfromnoz=3
 	fn = Fan(size=sz,thick=th)
 	fn.translate(Vector(-ac.hotEndDia/2 - ac.hotEndSpacing/2,0, ac.hotEndLen-ac.hotEndMountLen-2.4))
-	fn.translate(Vector(ac.mXpos-sz/2+ac.hotEndDia/2+ac.hotEndSpacing/2, ac.mYpos-th-ac.hotEndDia/2-1.2, ac.envelopeZ-sz+2.5))
+	fn.translate(Vector(ac.mXpos-sz/2+ac.hotEndDia/2+ac.hotEndSpacing/2, ac.mYpos-th-ac.hotEndDia/2-dfromnoz, ac.envelopeZ-sz+2.5))
 
 	fan = fn		
 	return fan
